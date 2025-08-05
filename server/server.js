@@ -1,0 +1,46 @@
+//import expreess and other necessary middlewares
+import express from 'express';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import cors from 'cors';
+// Importing database connection
+import {sql} from '../server/db/dbConnection.js';
+// Importing routes
+import memberRoutes from './routes/memberRoutes.js';
+import eventRoutes from './routes/eventRoutes.js';
+import blogRoutes from './routes/blogRoutes.js';
+import galleryRoutes from './routes/galleryRoutes.js';
+import committeeRoutes from './routes/committeeRoutes.js';
+import attendanceRoutes from './routes/attendanceRoutes.js';
+import pointsLogRoutes from './routes/pointsLogRoutes.js';
+// Importing environment variables
+import dotenv from 'dotenv';
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(cors());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+); // helmet is a security middleware that helps you protect your app by setting various HTTP headers
+app.use(morgan("dev")); // log the requests
+
+app.use('/api/members', memberRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/blogs', blogRoutes);
+app.use('/api/gallery', galleryRoutes);
+app.use('/api/committee', committeeRoutes);
+app.use('/api/attendances', attendanceRoutes);
+app.use('/api/pointslogs', pointsLogRoutes);
+
+if(sql){
+  app.listen(PORT, () => {
+    console.log(`Database connected successfully`);
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
