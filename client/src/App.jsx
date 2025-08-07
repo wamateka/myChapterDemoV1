@@ -9,6 +9,7 @@ import EventPage from './pages/EventPage'
 import {Routes, Route} from 'react-router-dom'
 import {Toaster} from"react-hot-toast"
 import DashBoardPage from './pages/DashboardPage'
+import SignUpPage from './pages/SignUpPage'
 function App() {
 
   return (
@@ -19,8 +20,10 @@ function App() {
       <Route path='/events' element={<EventsPage />} />
       <Route path='/blogs' element = {<BlogsPage />} />
       <Route path= '/dashboard' element= {<DashBoardPage /> }/>
+      <Route path= '/signup' element= {<SignUpPage /> }/>
       </Routes>
       <Footer/>
+      <Toaster position='top-center' reverseOrder={false}/>
     </div>
   )
 }
