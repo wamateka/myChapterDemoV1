@@ -26,7 +26,7 @@ export default {
       },
       {
         mytheme_dark: {
-          "primary": "#22C55E",      // Bright NSBE green for vibrancy in dark mode
+          "primary": "#166534",      // Bright NSBE green for vibrancy in dark mode
           "secondary": "#EF4444",    // Lighter red for contrast
           "accent": "#FBBF24",       // Golden yellow for highlights
           "neutral": "#1F2937",      // Dark gray for content backgrounds

@@ -29,9 +29,8 @@ export const getMemberById = async (req, res) => {
         res.status(500).json({ message: 'error', error: error.message });
     }
 }
-export const getMemberByEmail = async (req, res) => {
-    const { email } = req.params;
-    console.log("email: ", email);
+export const getMemberByEmail = async (req,res) => {
+    const {email} = req.params;
     try {
         const results = await sql`
             SELECT * FROM Members WHERE email = ${email};`
@@ -45,7 +44,7 @@ export const getMemberByEmail = async (req, res) => {
         res.status(500).json({ message: 'error', error: error.message });
     }
 }
-export const addMember = async (req, res) => {
+export const addMember = async (req, res, next) => {
     const { first_name, last_name, email, password } = req.body;
     try {
         const checkEmail = await sql`
@@ -54,24 +53,14 @@ export const addMember = async (req, res) => {
         if (checkEmail.length > 0) {
             return res.status(400).json({ message: 'Email already exists. Try logging in.' });
         }
-        // bcrypt.hash(password, SALT_ROUNDS, async (err, hash) => {
-        //     if (err) {
-        //         console.error('Error hashing password:', err);
-        //         res.status(500).json({ message: 'error', error: err.message });
-        //     } else {
-        //         const newMember = await sql`
-        //         INSERT INTO Members (first_name, last_name, email, login_password)
-        //         VALUES (${first_name}, ${last_name}, ${email}, ${hash})
-        //         RETURNING *;`;
-        //         res.status(201).json({ message: 'success', data: newMember[0] });
-        //     }
-        // })
         const hash = await bcrypt.hash(password, SALT_ROUNDS);
         const newMember = await sql`
                 INSERT INTO Members (first_name, last_name, email, login_password)
                  VALUES (${first_name}, ${last_name}, ${email}, ${hash})
                  RETURNING *;`;
-               res.status(201).json({ message: 'success', data: newMember[0] });
+            //    res.status(201).json({ message: 'success', data: newMember[0] });
+        req.user = newMember[0];
+        next();
     } catch (error) {
         console.error('Error adding member:', error);
         res.status(500).json({ message: 'error', error: error.message });

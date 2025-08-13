@@ -2,6 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Calendar, Users, Award, BookOpen, ArrowRight } from 'lucide-react'
 function HomePage() {
+    if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="loading loading-spinner loading-lg"></div>
+      </div>
+    )
+  }
   return (
     <div className="min-h-screen">
       {/* Hero Section */}

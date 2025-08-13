@@ -1,29 +1,29 @@
 import React, { useEffect } from 'react'
 import { useDashBoard } from '../stores/useDashBoard'
 import{Edit, Save,User,Phone,GraduationCap,Award,Calendar,Clock,MapPin} from 'lucide-react'
-
+import { useAuth } from '../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 function DashBoardPage() {
-    const {users, getUser} = useDashBoard();
-    useEffect(()=>{
-        getUser();
-    }, [getUser]);
-    const user = {
-      first_name: 'john',
-      last_name: 'doe',
-      email: 'abcd@gmail.com',
-      phone: '1234567',
-      major: 'computer science',
-      point: 57,
-      dues_paid: false,
-      
-      created_at: new Date(2025, 7, 6),
-
-
-    }
+  const {user, loadingUser} = useAuth();
+  const navigate = useNavigate();
+  useEffect(()=>{
+    console.log(user); 
+  },[])
+    // useEffect(()=>{
+    //     getUser();
+    // }, [getUser]);
     const recentActivity= []
     const recentRSVPs = [{ide: 1, title: 'ab', status: 'attended', event_date: new Date(2025, 5, 6), location: 'library' }, {ide: 2, title: 'cd', status: 'rsvp', event_date: new Date(2025, 7, 23), location: 'park' } ]
     const isEditing = false;
     const setIsEditing = () => {};
+
+      if (loadingUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="loading loading-spinner loading-lg"></div>
+      </div>
+    )
+  }
     
   return (
     <div className="min-h-screen bg-base-200 py-8">

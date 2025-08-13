@@ -20,11 +20,18 @@ function EventsPage() {
     if (eventDay > today) {
       return {status: 'upcoming', badge: 'info'}
     } else if (eventDay !== today) {
-      console.log(`${today} == ${eventDay}: ${today === eventDay}`)
       return {status: 'past', badge: 'warning'}
     } else if (eventDay === today){
       return {status: 'ongoing', badge: 'primary'}
     }
+  }
+
+    if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="loading loading-spinner loading-lg"></div>
+      </div>
+    )
   }
 
   return (
@@ -98,6 +105,7 @@ function EventsPage() {
                 rsvp_count={e.rsvp_count}
                 max_attendee={e.max_attendee}
                 points = {e.point_value}
+                attendees = {e.attendaces}
               />
             ))
             }

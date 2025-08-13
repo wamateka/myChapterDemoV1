@@ -3,10 +3,17 @@ import { useBlogStore } from '../stores/useBlogStore'
 import BlogCard from '../components/BlogCard';
 
 function BlogsPage() {
-  const {blogs, fetchBlogs} = useBlogStore();
+  const {blogs, fetchBlogs, loading} = useBlogStore();
   useEffect(()=>{
     fetchBlogs();
   }, []) 
+    if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="loading loading-spinner loading-lg"></div>
+      </div>
+    )
+  }
   return (
     <div className="min-h-screen bg-base-200 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,7 +26,7 @@ function BlogsPage() {
         </div>
 
         {/* Blog Posts */}
-        {blogs.length === 0 ? (
+        {blogs?.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">📝</div>
             <h3 className="text-xl font-semibold mb-2">No posts yet</h3>

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { isEmail, isStrongPassword } from 'validator';
-const BASE_URL = 'http://localhost:3000/api/members';
+import api from '../api';
 export const useSignUpStore = create((set, get) => ({
     loading: false,
     formData: {
@@ -111,7 +111,7 @@ export const useSignUpStore = create((set, get) => ({
         const { error } = get();
         const { formData } = get();
         try {
-            await axios.post(`${BASE_URL}`, formData)
+            await api.post(`/auth/signup`, formData)
             set({ error: null });
             toast.success('sign up successful!');
 
@@ -119,7 +119,10 @@ export const useSignUpStore = create((set, get) => ({
             if (error.response && error.response.data && error.response.data.message) {
                 set({ ...error, message: error.response.data.message });
                 toast.error(error.response.data.message);
-            } else {
+            } else if (status === 400){
+                set({ ...error, message: "Email already exists. Try logging in." });
+                toast.error("Email already exists. Try logging in.");
+            }else{
                 console.error('Error adding user: ', error);
                 set({ ...error, message: "Error adding user" });
                 toast.error("Error adding user");

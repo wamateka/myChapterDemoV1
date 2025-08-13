@@ -2,15 +2,12 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 // import { useAuth } from '../contexts/AuthContext'
 import { Menu, X, User, LogOut, Settings } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 const Navbar = () => {
-//   const { user, logout, isAdmin } = useAuth()
-    const user = null; // Placeholder for user state
-    const isAdmin = false; // Placeholder for admin state   
-    const logout = () => {
-        // Placeholder for logout function
-        console.log("User logged out");
-    }
+  //   const { user, logout, isAdmin } = useAuth()
+  const { user, logout } = useAuth()
+  const isAdmin = true; // Placeholder for admin state   
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -25,53 +22,56 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
-                <span className="text-primary font-bold text-sm">N</span>
+              <div className="w-20 h-20 bg-ghost rounded-full flex items-center justify-center">
+                <span className="text-primary font-bold text-base"><img src="../../public/nsbeLogo.svg" alt="" /></span>
               </div>
-              <span className="font-bold text-xl">NSBE Chapter</span>
+              <span className="font-semibold font-mono tracking-widest text-2xl 
+                    bg-clip-text text-transparent bg-gradient-to-r from-base-100 to-accent">
+                S&T Chapter</span>
             </Link>
           </div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/events" className="hover:text-secondary transition-colors">
-              Events
-            </Link>
-            <Link to="/gallery" className="hover:text-secondary transition-colors">
-              Gallery
-            </Link>
-            <Link to="/blogs" className="hover:text-secondary transition-colors">
-              Blog
-            </Link>
-            
+
+
             {user ? (
               <div className="flex items-center space-x-4">
+                <Link to="/events" className="hover:text-secondary transition-colors">
+                  Events
+                </Link>
+                <Link to="/gallery" className="hover:text-secondary transition-colors">
+                  Gallery
+                </Link>
+                <Link to="/blogs" className="hover:text-secondary transition-colors">
+                  Blog
+                </Link>
                 <Link to="/dashboard" className="hover:text-secondary transition-colors">
                   Dashboard
                 </Link>
                 <div className="dropdown dropdown-end">
                   <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                    <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
-                      <User className="w-4 h-4" />
-                    </div>
+                    <figure className='w-8 h-8 rounded-full bg-secondary flex items-center justify-center'>
+                      <img className="rounded-full" src={user.profile_picture} alt="" />
+                    </figure>
                   </div>
-                  <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                  <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-200 rounded-box w-52">
                     <li>
-                      <Link to="/dashboard" className="flex items-center">
-                        <User className="w-4 h-4" />
+                      <Link to="/dashboard" className="flex items-center text-primary">
+                        <User className="w-4 h-4  text-base" />
                         Profile
                       </Link>
                     </li>
                     {isAdmin && (
                       <li>
-                        <Link to="/admin" className="flex items-center">
-                          <Settings className="w-4 h-4" />
+                        <Link to="/admin" className="flex items-center text-primary">
+                          <Settings className="w-4 h-4 " />
                           Admin Panel
                         </Link>
                       </li>
                     )}
                     <li>
-                      <button onClick={handleLogout} className="flex items-center">
+                      <button onClick={handleLogout} className="flex items-center text-primary">
                         <LogOut className="w-4 h-4" />
                         Logout
                       </button>
@@ -127,7 +127,7 @@ const Navbar = () => {
               >
                 Blog
               </Link>
-              
+
               {user ? (
                 <>
                   <Link
@@ -140,7 +140,7 @@ const Navbar = () => {
                   {isAdmin && (
                     <Link
                       to="/admin"
-                      className="block px-3 py-2 rounded-md hover:text-secondary transition-colors"
+                      className="block px-3 py-2 text-primary rounded-md hover:text-secondary transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Admin

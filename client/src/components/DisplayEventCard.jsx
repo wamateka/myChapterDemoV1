@@ -36,7 +36,7 @@ function DisplayEventCard(props) {
                     
                     <div className="flex items-center gap-2 text-sm">
                       <Users className="w-4 h-4 text-primary" />
-                      <span>{props.rsvp_count} Are coming!</span>
+                      <span>{props.status.status === 'past'? `${props?.attendance?.length} attended!`: `${props.rsvp_count} Are coming !`}</span>
                     </div>
 
                     <div className="flex items-center gap-2 text-sm">
@@ -52,14 +52,14 @@ function DisplayEventCard(props) {
                       </div>
                     )}
                   </div>
-                  <div className="card-actions justify-end mt-4">
+                  {props.status.status !== 'past' && <div className="card-actions justify-end mt-4">
                     <button 
                       className="btn btn-primary btn-sm"
                     >
                       RSVP
                       <ArrowRight className="w-4 h-4" />
                     </button>
-                  </div>
+                  </div>}
             </div>
         </div>
     )

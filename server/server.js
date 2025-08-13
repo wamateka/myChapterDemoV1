@@ -13,22 +13,37 @@ import galleryRoutes from './routes/galleryRoutes.js';
 import committeeRoutes from './routes/committeeRoutes.js';
 import attendanceRoutes from './routes/attendanceRoutes.js';
 import pointsLogRoutes from './routes/pointsLogRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import passport from 'passport';
+import './passport-config.js';
 // Importing environment variables
 import dotenv from 'dotenv';
+import  session  from 'express-session';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // allow your frontend origin
+  credentials: true
+}));
 app.use(
   helmet({
     contentSecurityPolicy: false,
   })
 ); // helmet is a security middleware that helps you protect your app by setting various HTTP headers
-app.use(morgan("dev")); // log the requests
 
+app.use(morgan("dev")); // log the requests
+app.use('/api/auth', authRoutes);
 app.use('/api/members', memberRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/blogs', blogRoutes);

@@ -2,12 +2,13 @@ import React, { use, useEffect, useState } from 'react'
 import{User, Mail, Lock, Eye, EyeOff} from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSignUpStore } from '../stores/useSignUpStore';
+import { useAuth } from '../context/AuthContext';
 function SignUpPage() {
     const {formData, setForm_data, validateEmail, validatePassword, validateInputs, addUser, error,loading,resetform} = useSignUpStore();
+    const {user, checkMe} = useAuth();
     const [showPword, setShowPword] = useState(false);
     const [showCPword, setShowCPword] = useState(false);
     const navigate = useNavigate();
-
     function handleSubmit(e){
         e.preventDefault();
         validateInputs();
@@ -17,12 +18,25 @@ function SignUpPage() {
             addUser().then(() => {
                 resetform();
             });
+            checkMe();
+        }
+        if(user){
+          navigate('/dashboard')
+        }else{
+          console.log(user)
         }
     }, [formData.validated]);
     function onSubmit(data) {
         console.log(data);
     }
     const isLoading = false;
+      if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="loading loading-spinner loading-lg"></div>
+      </div>
+    )
+  }
     return (
     <div className="min-h-screen flex items-center justify-center bg-base-200 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -40,6 +54,7 @@ function SignUpPage() {
 
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body">
+            {error?.message && ( <span className='text-error text-sm'>{error?.message}</span> )}
             <form onSubmit={(e) => {handleSubmit(e)}} className="space-y-6">
             {/* {er && ( <span className='text-error text-sm'>{error?.message}</span> )} */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

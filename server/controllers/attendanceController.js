@@ -1,10 +1,9 @@
-import { get } from 'http';
 import {sql} from '../db/dbConnection.js';
 
 export const getAttendances = async (req, res) => {
     try {
         const attendanceRecords = await sql`
-            SELECT * FROM Attendance
+            SELECT * FROM attendance
             ORDER BY event_id, member_id;
         `;
         res.status(200).json({message: 'success', data: attendanceRecords});
@@ -18,7 +17,7 @@ export const getAttendanceById = async (req, res) => {
     const {id} = req.params;
     try {
         const results = await sql`
-            SELECT * FROM Attendance WHERE attendance_id = ${id};`;
+            SELECT * FROM attendance WHERE attendance_id = ${id};`;
         if (results.length === 0) {
             return res.status(404).json({message: 'Attendance record not found'});
         } else {
@@ -35,12 +34,12 @@ export const getAttendancesByEventId = async (req, res) => {
     const {eventId} = req.params;
     try {
         const results = await sql`
-            SELECT * FROM Attendance WHERE event_id = ${eventId};`;
-        if (results.length === 0) {
-            return res.status(404).json({message: 'No attendance records found for this event'});
-        } else {
+            SELECT * 
+            FROM attendance a
+            JOIN events e ON a.event_id = e.event_id
+            JOIN members m ON a.member_id = m.member_id
+            WHERE a.event_id = ${eventId};`;
             res.status(200).json({message: 'success', data: results});
-        }
     } catch (error) {
         console.error('Error fetching attendance by event ID:', error);
         res.status(500).json({message: 'error', error: error.message});
@@ -51,7 +50,12 @@ export const getAttendancesByMemberId = async (req, res) => {
     const {memberId} = req.params;
     try {
         const results = await sql`
-            SELECT * FROM Attendance WHERE member_id = ${memberId} ORDER BY event_id;`;
+            SELECT * 
+            FROM attendance a
+            JOIN members m ON a.member_id = m.member_id
+            JOIN events e ON a.event_id = e.event_id
+            WHERE member_id = ${memberId} 
+            ORDER BY event_id;`;
         if (results.length === 0) {
             return res.status(404).json({message: 'No attendance records found for this member'});
         } else {
@@ -67,7 +71,9 @@ export const getAttendanceByStatus = async (req, res) => {
     const {status} = req.params;
     try {
         const results = await sql`
-            SELECT * FROM Attendance WHERE status = ${status};`;
+            SELECT * 
+            FROM attendance 
+            WHERE status = ${status};`;
         if (results.length === 0) {
             return res.status(404).json({message: 'No attendance records found for this status'});
         } else {
