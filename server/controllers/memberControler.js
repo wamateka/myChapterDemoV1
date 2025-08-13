@@ -34,11 +34,7 @@ export const getMemberByEmail = async (req,res) => {
     try {
         const results = await sql`
             SELECT * FROM Members WHERE email = ${email};`
-        if (results.length === 0) {
-            return res.status(404).json({ message: 'Member not found' });
-        } else {
             res.status(200).json({ message: 'success', data: results[0] });
-        }
     } catch (error) {
         console.error('Error fetching member by email:', error);
         res.status(500).json({ message: 'error', error: error.message });

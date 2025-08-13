@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useContext } from 'react'
 import api from '../api'
 import { Children } from 'react'
+import toast from 'react-hot-toast'
 
 const AuthContext = createContext()
 
@@ -26,9 +27,17 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         setLoginguser(true)
-        await api.post('/auth/login', {email,password})
-        checkMe()
-        setLoginguser(false)
+        try{
+        const res = await api.post('/auth/login', {email,password})
+        setUser(res.data.user);
+        // checkMe()
+        toast.success('logged in succesfully');
+        }catch(err){
+            console.log('error logging user: ', err);
+            toast.error(err.response.data.message)
+        }finally{
+            setLoginguser(false)
+        }
     }
     
     const logout = async () =>{

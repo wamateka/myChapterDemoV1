@@ -17,6 +17,7 @@ import AdminPanelPage from './pages/Admin/AdminPanelPage'
 import AdminEvents from './pages/Admin/AdminEvents'
 import AdminBlogs from './pages/Admin/AdminBlogs'
 import AdminAttendance from './pages/Admin/AdminAttendance'
+import GalleryPage from './pages/GalleryPage'
 function App() {
 
   return (
@@ -28,6 +29,12 @@ function App() {
       <Route path='/events' element={
         <ProtectedRoutes>
           <EventsPage />
+        </ProtectedRoutes>
+        
+      } />
+      <Route path='/gallery' element={
+        <ProtectedRoutes>
+          <GalleryPage />
         </ProtectedRoutes>
         
       } />

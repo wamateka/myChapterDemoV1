@@ -17,7 +17,7 @@ export const useLoginStore = create((set,get) => ({
             await api.post('auth/login', formData);
             toast.success('logged in succesfully');
         }catch(err){
-            console.log(err);
+            console.log('error loggin user: ', err);
             toast.error('Invalid credentials!')
         }finally{
             set({loading:false})

@@ -16,7 +16,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async function verify
     return cb(null, user);
 }))
 passport.serializeUser((user, done) => {
-    console.log('serializing : ',user)
+    // console.log('serializing : ',user)
     done(null, user.member_id)
 })
 
@@ -24,7 +24,7 @@ passport.deserializeUser(async (id, done) => {
     try {
         const results = await axios.get(`${BASE_URL}/${id}`)
         const user = results.data.data;
-        console.log(user)
+        // console.log(user)
         done(null, user)
     }catch(err){
         console.error(err);
