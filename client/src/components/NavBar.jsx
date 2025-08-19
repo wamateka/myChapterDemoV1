@@ -49,6 +49,9 @@ const Navbar = () => {
                 <Link to="/dashboard" className="hover:text-secondary transition-colors">
                   Dashboard
                 </Link>
+                <Link to="/leaderboard" className="hover:text-secondary transition-colors">
+                  Leaderboard
+                </Link>
                 <div className="dropdown dropdown-end">
                   <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                     <figure className='w-8 h-8 rounded-full bg-secondary flex items-center justify-center'>

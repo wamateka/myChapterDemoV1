@@ -107,7 +107,7 @@ function AdminAttendance() {
                         <div className="stat">
                           <div className="stat-title">Points Awarded</div>
                           <div className="stat-value text-primary">
-                            {eventAttendance.reduce((sum, a) => sum + a.points_value, 0)}
+                            {eventAttendance.reduce((sum, a) => sum + a.points_value, 0)|| 0}
                           </div>
                         </div>
                       </div>

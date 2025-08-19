@@ -25,13 +25,14 @@ function GalleryPage() {
                 </div>
                 <div className="p-6 max-w-7xl mx-auto">
                     <h1 className="text-3xl font-bold mb-6">Gallery</h1>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div className="flex flex-wrap gap-4 items-end">
                         {gallery.map((image) => (
-                            <div key={image.gallery_image_id} className="overflow-hidden rounded-xl shadow-md hover:shadow-lg transition">
+                            <div key={image.gallery_image_id} className="flex-shrink-0">
                                 <img
                                     src={image.image_url}
                                     alt="image"
-                                    className="w-full h-auto rounded-xl transition-transform duration-300 hover:scale-105"
+                                    className="h-60 w-auto rounded-xl transition-transform duration-300 hover:scale-105 object-cover"
+                                    style={{ display: 'block' }}
                                 />
                             </div>
                         ))}

@@ -18,6 +18,8 @@ import AdminEvents from './pages/Admin/AdminEvents'
 import AdminBlogs from './pages/Admin/AdminBlogs'
 import AdminAttendance from './pages/Admin/AdminAttendance'
 import GalleryPage from './pages/GalleryPage'
+import DashboardCopy from './pages/DashboardPageCopy'
+import Leaderboard from './pages/LeaderBoardPage'
 function App() {
 
   return (
@@ -47,6 +49,12 @@ function App() {
       <Route path= '/dashboard'  element={
         <ProtectedRoutes>
           <DashBoardPage/>
+        </ProtectedRoutes>
+        
+      }/>
+      <Route path= '/leaderboard'  element={
+        <ProtectedRoutes>
+          <Leaderboard/>
         </ProtectedRoutes>
         
       }/>
