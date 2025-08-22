@@ -7,22 +7,22 @@ const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [loadingUser, setLaodingUser]= useState(false);
+    const [loadingUser, setLoadingUser]= useState(false);
     const [logingUser, setLoginguser] = useState(false);
 
     useEffect(() => {
-        setLaodingUser(true)
-        api.get('/auth/me')
+        setLoadingUser(true)
+        api.get('/auth/me', {withCredentials: true})
             .then(res => setUser(res.data))
-            .then(setLaodingUser(false))
+            .then(setLoadingUser(false))
             .catch(() => setUser(null))
     }, [])
 
     const checkMe = async() => {
-        setLaodingUser(true)
-        const res = await api.get('auth/me')
+        setLoadingUser(true)
+        const res = await api.get('auth/me', {withCredentials: true})
         setUser(res.data)
-        setLaodingUser(false)
+        setLoadingUser(false)
     }
 
     const login = async (email, password) => {
@@ -41,10 +41,10 @@ export const AuthProvider = ({ children }) => {
     }
     
     const logout = async () =>{
-        setLaodingUser(true)
+        setLoadingUser(true)
         await api.post('auth/logout')
         setUser(null);
-        setLaodingUser(false)
+        setLoadingUser(false)
     }
     const value = {
         user,
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
         isAdmin: user?.role === 'admin'
     }
     return(
-        <AuthContext.Provider value={{user, login, logout, checkMe}}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     )

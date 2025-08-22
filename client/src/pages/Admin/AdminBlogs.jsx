@@ -1,9 +1,11 @@
 import React,{useEffect} from 'react'
-import { FileText, Plus, Edit, Trash2, Eye } from 'lucide-react'
+import { FileText, Plus, Edit, Trash2, Eye, ArrowLeftIcon } from 'lucide-react'
 import { useBlogStore } from '../../stores/useBlogStore';
+import {Navigate, useNavigate} from 'react-router-dom'
 
 function AdminBlogs() {
       const {blogs, fetchBlogs, loading} = useBlogStore();
+      const navigate = useNavigate();
       useEffect(()=>{
         fetchBlogs();
       }, []) 
@@ -16,7 +18,12 @@ function AdminBlogs() {
     )
   }
   return (
+    
     <div className="min-h-screen bg-base-200 py-8">
+      <button onClick = {() =>{navigate("/admin")}}className='btn btn-ghost mb-8'>
+        <ArrowLeftIcon className='size-4 mr-2'/>
+        Back to admin page
+      </button>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">

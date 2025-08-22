@@ -16,9 +16,9 @@ function ProtectedRoutes({ children, requireAdmin = false }) {
         return <Navigate to="/login" replace />
     }
 
-    // if (requireAdmin && !isAdmin) {
-    //     return <Navigate to="/dashboard" replace />
-    // }
+    if (requireAdmin && !isAdmin) {
+        return <Navigate to="/dashboard" replace />
+    }
 
 
     return  children

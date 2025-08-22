@@ -24,6 +24,7 @@ passport.deserializeUser(async (id, done) => {
     try {
         const results = await axios.get(`${BASE_URL}/${id}`)
         const user = results.data.data;
+        console.log('deserilized user', user)
         // console.log(user)
         done(null, user)
     }catch(err){

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useEventStore } from '../../stores/useEventStore'
 import { useAttendanceStore } from '../../stores/useAttendanceStore';
-import { Award, Users, CheckCircle, XCircle, Plus } from 'lucide-react'
+import { Award, Users, CheckCircle, XCircle, Plus, ArrowLeftIcon } from 'lucide-react'
+import { Navigate, useNavigate } from 'react-router-dom';
 function AdminAttendance() {
     const {events,fetchEvents} = useEventStore();
     const {fetchAttendances, attendances, loading,  memberAttendance,eventAttendance, fetchEventAttendance}  = useAttendanceStore();
     const [selectedEvent, setSelectedEvent] = useState(null);
-
+    const navigate = useNavigate();
     useEffect(()=>{
         fetchEvents();
         fetchAttendances();
@@ -17,8 +18,12 @@ function AdminAttendance() {
     }
 
     
-  return (
+  return ( 
         <div className="min-h-screen bg-base-200 py-8">
+          <button onClick = {() =>{navigate("/admin")}}className='btn btn-ghost mb-8'>
+        <ArrowLeftIcon className='size-4 mr-2'/>
+        Back to admin page
+      </button>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">

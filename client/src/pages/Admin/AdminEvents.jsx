@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react'
-import {Plus, Calendar, Users, Edit, Trash2}from 'lucide-react'
+import {Plus, Calendar, Users, Edit, Trash2, ArrowLeftIcon}from 'lucide-react'
 import { useEventStore } from '../../stores/useEventStore';
+import {useNavigate} from 'react-router-dom'
 
 function AdminEvents() {
     const {events, getAttendance, getAttendanceByMemberId, fetchEvents} =  useEventStore();
+    const navigate = useNavigate();
     useEffect(()=>{
         fetchEvents();
         getAttendance();
@@ -23,6 +25,10 @@ function AdminEvents() {
   }
   return (
     <div className="min-h-screen bg-base-200 py-8">
+      <button onClick = {() =>{navigate("/admin")}}className='btn btn-ghost mb-8'>
+        <ArrowLeftIcon className='size-4 mr-2'/>
+        Back to admin page
+      </button>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -80,7 +86,7 @@ function AdminEvents() {
                         <td>
                           <div className="flex items-center gap-1">
                             <Users className="w-4 h-4" />
-                            {event.rsvp_count || 0}
+                            {event.rsvp_count}
                           </div>
                         </td>
                         <td>{event.points_value} pts</td>

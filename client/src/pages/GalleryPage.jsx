@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 import { useGalleryStore } from '../stores/useGalleryStore'
+import { Plus } from 'lucide-react'
+import UploadImageModal from '../components/uploadImageModal';
 
 function GalleryPage() {
     const { fetchGallery, gallery, loading } = useGalleryStore();
@@ -15,6 +17,7 @@ function GalleryPage() {
     }
     return (
         <div className="min-h-screen bg-base-200 py-8">
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="text-center mb-8">
@@ -23,8 +26,15 @@ function GalleryPage() {
                         Browse photos from our events and activities
                     </p>
                 </div>
+
                 <div className="p-6 max-w-7xl mx-auto">
+                    <div className='flex items-center justify-between mb-6'>
                     <h1 className="text-3xl font-bold mb-6">Gallery</h1>
+                    <button className="btn btn-primary" onClick={()=> {document.getElementById("upload_img").showModal()}}>
+                        <Plus className="w-4 h-4 mr-2" />
+                        upload Image
+                    </button>
+                    </div>
                     <div className="flex flex-wrap gap-4 items-end">
                         {gallery.map((image) => (
                             <div key={image.gallery_image_id} className="flex-shrink-0">
@@ -39,6 +49,7 @@ function GalleryPage() {
                     </div>
                 </div>
             </div>
+            <UploadImageModal/>
         </div>
 
     )

@@ -5,9 +5,7 @@ import { Menu, X, User, LogOut, Settings } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 const Navbar = () => {
-  //   const { user, logout, isAdmin } = useAuth()
-  const { user, logout } = useAuth()
-  const isAdmin = true; // Placeholder for admin state   
+  const { user, logout, isAdmin } = useAuth()   
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -15,6 +13,7 @@ const Navbar = () => {
     logout()
     navigate('/')
   }
+  // console.log(isAdmin)
 
   return (
     <nav className="bg-primary text-primary-content shadow-lg">
