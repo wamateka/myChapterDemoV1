@@ -50,14 +50,12 @@ export const getGalleryImageByMemberId = async (req, res) => {
 
 export const addGalleryImage = async (req, res) => {
   const { memberId,caption } = req.body;
-  console.log(req.body)
   const fileBase64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`
   const fileName = req.file.originalname
-
   try {
     console.log("uploading image ...");
     // console.log(fileBase64)
-    const url = await upload(fileBase64,fileName);
+    const url = await upload(fileBase64,fileName, 'gallery');
     console.log("image uploaded susccefully:",url);    
     const newImage = await sql`
             INSERT INTO GalleryImages (member_id, image_url, caption)

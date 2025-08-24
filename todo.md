@@ -22,3 +22,8 @@
 # events
 - better layout style
 - add rsvp functionality
+# databse
+- improving the database for faster reading and writing of the database
+# cloudinary - profile pictures
+- update the profile picture api so that it deletes the old picture 
+    *you might have to change the function in cloudinary

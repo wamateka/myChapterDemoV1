@@ -10,9 +10,9 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-export async function upload(file,fileName) {
+export async function upload(file,fileName, folder) {
     const options = {
-        folder: "nsbe/gallery",
+        folder: `nsbe/${folder}`,
         public_id: fileName,
         overwrite: true
 
@@ -20,6 +20,8 @@ export async function upload(file,fileName) {
     const results = await cloudinary.uploader.upload(file, options)
 
     return results.url
+
+
     // return cloudinary.url(results.public_id, {
     //     transformation: [
     //         {

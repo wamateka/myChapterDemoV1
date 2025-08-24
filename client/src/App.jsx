@@ -20,6 +20,7 @@ import AdminAttendance from './pages/Admin/AdminAttendance'
 import GalleryPage from './pages/GalleryPage'
 import DashboardCopy from './pages/DashboardPageCopy'
 import Leaderboard from './pages/LeaderBoardPage'
+import ProfilePage from './pages/ProfilePage'
 function App() {
 
   return (
@@ -84,6 +85,11 @@ function App() {
           <AdminAttendance />
         </ProtectedRoutes>
         
+      }/>
+      <Route path='/profile' element = {
+        <ProtectedRoutes >
+          <ProfilePage/>
+        </ProtectedRoutes>
       }/>
       </Routes>
       {/* <Footer/> */}

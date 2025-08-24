@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useDashBoard } from '../stores/useDashBoard'
+import { useUserStore } from '../stores/useUserStore'
 import{Edit, Save,User,Phone,GraduationCap,Award,Calendar,Clock,MapPin} from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'

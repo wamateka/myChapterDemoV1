@@ -1,4 +1,4 @@
-import { Camera, CircleX, File, PlusCircleIcon, Text } from 'lucide-react'
+import { Camera, CircleX, File, PlusCircleIcon, Text, X } from 'lucide-react'
 import React, { useState } from 'react'
 import { useGalleryStore } from '../stores/useGalleryStore'
 import { useAuth } from '../context/AuthContext';
@@ -83,7 +83,7 @@ function UploadImageModal() {
                     {/* modal actions */}
                     <div className="modal-action">
                         <form method="dialog">
-                            <button className="btn btn-ghost">Cancel</button>
+                            <button className="btn btn-ghost"><X className="w-4 h-4" /> Cancel</button>
                         </form>
                         <button
                             type="submit"

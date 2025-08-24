@@ -59,7 +59,7 @@ const Navbar = () => {
                   </div>
                   <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-200 rounded-box w-52">
                     <li>
-                      <Link to="/dashboard" className="flex items-center text-primary">
+                      <Link to="/profile" className="flex items-center text-primary">
                         <User className="w-4 h-4  text-base" />
                         Profile
                       </Link>
@@ -139,10 +139,14 @@ const Navbar = () => {
                   >
                     Dashboard
                   </Link>
+                  <Link to="/profile" className="block px-3 py-2 rounded-md hover:text-secondary transition-colors">
+                        <User className="w-4 h-4  text-base" />
+                        Profile
+                  </Link>
                   {isAdmin && (
                     <Link
                       to="/admin"
-                      className="block px-3 py-2 text-primary rounded-md hover:text-secondary transition-colors"
+                      className="block px-3 py-2 rounded-md hover:text-secondary transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Admin

@@ -1,5 +1,6 @@
 import { sql } from "../db/dbConnection.js";
 import bcrypt from "bcrypt";
+import { upload } from "../util/cloudinary.js";
 const SALT_ROUNDS = 5;
 export const getMembers = async (req, res) => {
   try {
@@ -56,6 +57,54 @@ export const getMemberByEmail = async (req, res) => {
     res.status(500).json({ message: "error", error: error.message });
   }
 };
+
+export const getProfile = async (req,res) => {
+  const {id} = req.params
+  try{
+    const results = await sql `
+    SELECT 
+    m.first_name,
+    m.last_name,
+    m.profile_picture,
+    m.year_in_college,
+    m.email,
+    m.phone_number,
+    m.nsbe_id,
+    m.nsbe_membership_type,
+    m.major,
+    m.graduation_year,
+    m.local_dues,
+    m.national_dues,
+    STRING_AGG(DISTINCT c.name || '-' || cm.role, ', ') AS committees,
+    STRING_AGG(DISTINCT e.title, ', ') AS eboard_position,
+    z.name AS zone_name
+    
+FROM 
+    members m
+LEFT JOIN 
+    committeemembership cm ON m.member_id = cm.member_id
+LEFT JOIN 
+    committees c ON cm.committee_id = c.committee_id
+LEFT JOIN 
+    eboard e ON m.member_id = e.member_id
+LEFT JOIN
+    zones z ON e.zone_id = z.zone_id
+WHERE 
+    m.member_id = 2
+GROUP BY 
+    m.member_id, m.first_name, m.last_name, m.profile_picture, m.year_in_college, 
+    m.email, m.phone_number, m.nsbe_id, m.nsbe_membership_type, m.major, m.graduation_year, z.name
+    `
+    if(results.length===0){
+      return res.status(404).json({message: "Member not found"});
+    }else{
+      res.status(200).json({message: "success", data: results[0]})
+    }
+  }catch(error){
+    console.log("Error fecthing profile: ", error)
+    res.status(500).json({message: "error", error: error.message})
+  }
+}
 export const addMember = async (req, res, next) => {
   const { first_name, last_name, email, password } = req.body;
   try {
@@ -84,20 +133,32 @@ export const addMember = async (req, res, next) => {
 export const updateMember = async (req, res) => {
   const { id } = req.params;
   const {
-    nsbe_id,
+    
     first_name,
     last_name,
     email,
-    graduation_year,
+    phone_number,
+    nsbe_id,
+    membership_type,
     major,
-    role,
-    locals_dues,
+    college_year,
+    graduation_year,    
     national_dues,
   } = req.body;
   try {
     const updatedMember = await sql`
             UPDATE Members
-            SET nsbe_id = ${nsbe_id}, first_name = ${first_name}, last_name = ${last_name}, email = ${email}, graduation_year = ${graduation_year}, major = ${major}, role = ${role}, locals_dues = ${locals_dues}, national_dues = ${national_dues}
+            SET 
+            nsbe_id = ${nsbe_id}, 
+            first_name = ${first_name}, 
+            last_name = ${last_name}, 
+            email = ${email},
+            phone_number = ${phone_number},
+            graduation_year = ${graduation_year}, 
+            major = ${major},
+            year_in_college = ${college_year},
+            national_dues = ${national_dues},
+            nsbe_membership_type = ${membership_type}
             WHERE member_id = ${id}
             RETURNING *;`;
     if (updatedMember.length === 0) {
@@ -110,6 +171,30 @@ export const updateMember = async (req, res) => {
     res.status(500).json({ message: "error", error: error.message });
   }
 };
+
+export const updateProfilePicture = async (req,res) => {
+  const {id} = req.params
+  const fileBase64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`
+  const fileName = req.file.originalname
+  try{
+    console.log('changing profile picture...')
+    const url = await upload(fileBase64,fileName, 'profile_pictures')
+    console.log('picture updated successfully✅: ', url)
+    
+    const newPic = await sql`
+    UPDATE members
+    SET 
+    profile_picture = ${url}
+    WHERE member_id = ${id}
+    RETURNING *;
+    `;
+    res.status(200).json({message: "success", data : url})
+  }catch(error){
+    console.log('error saving picture: ',error)
+    res.status(500).json({message: "error", error: error.message})
+  }
+
+}
 
 export const deleteMember = async (req, res) => {
   const { id } = req.params;
