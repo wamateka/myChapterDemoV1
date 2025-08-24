@@ -11,7 +11,7 @@ export const useEventStore = create((set,get) => ({
     error: null,
     setFilter: (filter) => set({filter}),
     fetchEvents: async () => {
-        set({laodung: true, error: null});
+        set({loading: true, error: null});
         try{
             const response = await api.get(`/events`);
             set({events: response.data.data, error: null, filteredEvents: response.data.data});

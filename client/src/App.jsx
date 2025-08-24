@@ -21,6 +21,7 @@ import GalleryPage from './pages/GalleryPage'
 import DashboardCopy from './pages/DashboardPageCopy'
 import Leaderboard from './pages/LeaderBoardPage'
 import ProfilePage from './pages/ProfilePage'
+import DashBoardPageCopy from './pages/DashboardPageCopy'
 function App() {
 
   return (
@@ -49,7 +50,7 @@ function App() {
       } />
       <Route path= '/dashboard'  element={
         <ProtectedRoutes>
-          <DashBoardPage/>
+          <DashBoardPageCopy/>
         </ProtectedRoutes>
         
       }/>
