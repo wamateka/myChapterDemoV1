@@ -5,26 +5,26 @@ import { useAuth } from '../context/AuthContext';
 
 function UploadImageModal() {
     const { user } = useAuth();
-    const { formData, setFormData, uploadImage, uploading,resetFormData,fetchGallery } = useGalleryStore();
+    const { formData, setFormData, uploadImage, uploading, resetFormData, fetchGallery } = useGalleryStore();
     const [preview, setPreview] = useState(null);
 
     function handleFileChange(e) {
         const file = e.target.files[0]
         if (file) {
-            setFormData(({ ...formData, imageFile: file}))
+            setFormData(({ ...formData, imageFile: file }))
             setPreview(URL.createObjectURL(file));
-            console.log(preview)
+            // console.log(preview)
         }
 
     }
-    function handleSubmit(e){
+    function handleSubmit(e) {
         e.preventDefault();
         // console.log(formData);
-        setFormData({...formData, memberId: user.member_id})        
+        setFormData({ ...formData, memberId: user.member_id })
         uploadImage();
         setPreview(null)
         document.getElementById('fileUpload').value = "";
-        resetFormData();      
+        resetFormData();
     }
 
     return (
@@ -34,7 +34,7 @@ function UploadImageModal() {
                     <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'><CircleX /></button>
                 </form>
                 <h3 className='font-bold text-xl mb-8'>upload a new Image</h3>
-                <form onSubmit={(e) => {handleSubmit(e)}} className='gap-6'>
+                <form onSubmit={(e) => { handleSubmit(e) }} className='gap-6'>
                     {/* file section*/}
                     <div className="form-control">
                         <label className="label">
@@ -46,8 +46,8 @@ function UploadImageModal() {
                             </div>
                             <input
                                 type='file'
-                                id = 'fileUpload'
-                                name = 'imageFile'
+                                id='fileUpload'
+                                name='imageFile'
                                 accept="image/*"
                                 className="input input-bordered w-full pl-10 py-3 focus:input-primary transition-colors duration-200"
                                 // value={formData.imageFilePath}
@@ -75,7 +75,7 @@ function UploadImageModal() {
                                 type='text'
                                 className="input input-bordered w-full pl-10 py-3 focus:input-primary transition-colors duration-200"
                                 value={formData.caption}
-                                onChange={(e) => setFormData({ ...formData, caption: e.target.value})}
+                                onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
                             />
                         </div>
                     </div>
@@ -100,15 +100,8 @@ function UploadImageModal() {
                             )}
                         </button>
                     </div>
-
-
-
                 </form>
-
-
-
             </div>
-
         </dialog>
     )
 }

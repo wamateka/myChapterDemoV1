@@ -22,6 +22,8 @@ import DashboardCopy from './pages/DashboardPageCopy'
 import Leaderboard from './pages/LeaderBoardPage'
 import ProfilePage from './pages/ProfilePage'
 import DashBoardPageCopy from './pages/DashboardPageCopy'
+import CreateEventPage from './pages/Admin/CreateEvent'
+import EditEventPage from './pages/Admin/EditEventPage'
 function App() {
 
   return (
@@ -50,7 +52,7 @@ function App() {
       } />
       <Route path= '/dashboard'  element={
         <ProtectedRoutes>
-          <DashBoardPageCopy/>
+          <DashBoardPage/>
         </ProtectedRoutes>
         
       }/>
@@ -72,6 +74,18 @@ function App() {
       <Route path= '/admin/events'  element={
         <ProtectedRoutes requireAdmin>
           <AdminEvents/>
+        </ProtectedRoutes>
+        
+      }/>
+      <Route path= '/admin/events/create'  element={
+        <ProtectedRoutes requireAdmin>
+          <CreateEventPage/>
+        </ProtectedRoutes>
+        
+      }/>
+      <Route path= '/admin/events/edit/:id'  element={
+        <ProtectedRoutes requireAdmin>
+          <EditEventPage/>
         </ProtectedRoutes>
         
       }/>

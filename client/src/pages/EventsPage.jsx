@@ -7,6 +7,7 @@ import { Badge } from 'lucide-react';
 function EventsPage() {
   const { filter, setFilter, events, filteredEvents, loading, error, fetchEvents, filterEvents } = useEventStore();
   useEffect(() => {
+    setFilter('all')
     fetchEvents();
   }, [fetchEvents]);
   const handleFilterChange = (newFilter) => {
@@ -105,7 +106,7 @@ function EventsPage() {
                 rsvp_count={e.rsvp_count}
                 max_attendee={e.max_attendee}
                 points = {e.point_value}
-                attendees = {e.attendaces}
+                attendees = {e.attendee_count}
               />
             ))
             }

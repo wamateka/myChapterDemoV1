@@ -14,6 +14,7 @@ import committeeRoutes from './routes/committeeRoutes.js';
 import attendanceRoutes from './routes/attendanceRoutes.js';
 import pointsLogRoutes from './routes/pointsLogRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import rsvpRoutes from './routes/rsvpRoutes.js'
 import passport from 'passport';
 import './passport-config.js';
 // Importing environment variables
@@ -50,6 +51,7 @@ app.use(morgan("dev")); // log the requests
 app.use('/api/auth', authRoutes);
 app.use('/api/members', memberRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/rsvp', rsvpRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/committee', committeeRoutes);

@@ -20,6 +20,7 @@
 # leaderboard
 - improve the leaderboard style
 # events
+- better filtering using queries (try storing it in another array that to avoid re renders)
 - better layout style
 - add rsvp functionality
 # databse
@@ -27,3 +28,5 @@
 # cloudinary - profile pictures
 - update the profile picture api so that it deletes the old picture 
     *you might have to change the function in cloudinary
+# cloudinary
+- make sure images CRUD operations sync with database

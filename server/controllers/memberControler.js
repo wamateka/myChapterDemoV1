@@ -30,7 +30,28 @@ export const getLeaderboard = async (req, res) => {
     res.status(500).json({ message: "error", error: error.message });
   }
 };
-
+export const getMemberStats = async (req,res) =>{
+  const {id} = req.params
+  try{
+    const stats = await sql `
+    SELECT  m.member_id, COALESCE(SUM(p.points), 0) AS total_points, COUNT(DISTINCT a.event_id) AS events_attended
+    FROM members m
+    LEFT JOIN pointslog p ON m.member_id = p.member_id
+    LEFT JOIN attendance a ON m.member_id = a.member_id AND a.status = 'present'
+    WHERE m.member_id = ${id}
+    GROUP BY m.member_id    
+    `
+    const eventCount = await sql`
+   SELECT COUNT(*) 
+   FROM attendance 
+   WHERE member_id = ${id} AND status = 'present'
+    `
+    res.status(200).json({message: "success get points", data: stats[0]})
+  }catch(error){
+    console.log('error getting user points:, ', error)
+    res.status(500).json({ message: "error", error: error.message });
+  }
+}
 export const getMemberById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -39,7 +60,7 @@ export const getMemberById = async (req, res) => {
     if (results.length === 0) {
       return res.status(404).json({ message: "Member not found" });
     } else {
-      res.status(200).json({ message: "success", data: results[0] });
+      return res.status(200).json({ message: "success", data: results[0] });
     }
   } catch (error) {
     console.error("Error fetching member:", error);

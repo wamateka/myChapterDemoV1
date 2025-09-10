@@ -6,7 +6,9 @@ export const useUserStore = create((set, get) => ({
     profile: {},
     user: {},
     loading: false,
+    loading_rsvp_status: false,
     error: null,
+    stats:null,
     formData: {
         first_name: "",
         last_name: "",
@@ -19,6 +21,7 @@ export const useUserStore = create((set, get) => ({
         graduation_year: "",
         national_dues: "",
     },
+    setPoints: (points) =>set({points}),
     setformData: (formData) => set({formData}),
     resetformData: () => set({
         formData: {
@@ -60,6 +63,29 @@ export const useUserStore = create((set, get) => ({
             console.log('error getting user: ', err);
         } finally {
             set({ loading: false })
+        }
+    },
+    getStats: async (id) =>{
+        const {stats} = get()
+        try{
+            const response = await api.get(`members/stats/${id}`)
+            set({stats: response.data.data})
+            console.log(stats)
+        }catch(err){
+            console.log('error getting points: ', err)
+
+        }
+    },
+    getEventRsvpStatus: async(member_id, event_id) => {
+        set({loading_rsvp_status: true})
+        try{
+            const response = await api.get(`/rsvp/status?member_id=${member_id}&event_id=${event_id}`)
+            return response.data.data.status
+        }catch(err){
+            console.log("error getting rsvp status: ", err)
+            return false
+        }finally{
+            set({loading_rsvp_status: false})
         }
     },
     updateProfile: async (id) => {
