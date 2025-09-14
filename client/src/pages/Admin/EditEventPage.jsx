@@ -6,7 +6,7 @@ import { redirect, useNavigate, useParams } from "react-router-dom";
 
 export default function EditEventPage() {
     const { user } = useAuth()
-    const { formData, setFormData, resetFormData,fetchEvent, updateEvent } = useEventStore();
+    const { formData, setFormData, resetFormData, fetchEvent, updateEvent, deleteEvent } = useEventStore();
     const [posterPreview, setPosterPreview] = useState(null)
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -32,10 +32,13 @@ export default function EditEventPage() {
         });
         // setFormData({...formData, name: value})
     };
-    function handleDelete(){
-
+    function handleDelete(e) {
+        e.preventDefault();
+        deleteEvent(id);
+        resetFormData();
+        navigate(-1);
     }
-    const handleUpdate= async (e) => {
+    const handleUpdate = async (e) => {
         e.preventDefault();
         setFormData({
             ...formData,
@@ -141,7 +144,7 @@ export default function EditEventPage() {
                                     type="datetime-local"
                                     name="start_datetime"
                                     value={formData?.start_datetime ? new Date(formData.start_datetime).toISOString()
-                                        .slice(0, 16): new Date()}
+                                        .slice(0, 16) : new Date()}
                                     onChange={handleChange}
                                     className="input input-bordered w-full"
                                     required
@@ -158,7 +161,7 @@ export default function EditEventPage() {
                                     type="datetime-local"
                                     name="end_datetime"
                                     value={formData.end_datetime ? new Date(formData.end_datetime).toISOString()
-                                        .slice(0, 16): new Date()}
+                                        .slice(0, 16) : new Date()}
                                     onChange={handleChange}
                                     className="input input-bordered w-full"
                                     required
@@ -198,13 +201,13 @@ export default function EditEventPage() {
                                 className="input input-bordered w-full pl-10 py-3 focus:input-primary transition-colors duration-200"
 
                             />
-                           
-                                <img
-                                    src={posterPreview || formData.poster_img_url}
-                                    alt="Poster Preview"
-                                    className="mt-3 rounded-lg shadow-md w-48 h-32 object-cover border border-base-200"
-                                />
-                            
+
+                            <img
+                                src={posterPreview || formData.poster_img_url}
+                                alt="Poster Preview"
+                                className="mt-3 rounded-lg shadow-md w-48 h-32 object-cover border border-base-200"
+                            />
+
                         </div>
 
                         {/* Max Attendee */}
@@ -230,21 +233,50 @@ export default function EditEventPage() {
                                 className="btn btn-primary w-full"
                                 disabled={loading || !formData.title || !formData.location}
                             >
-                                <SaveAllIcon size={18}/>
-                                {loading ? <span className="loading loading-spinner loading-lg"></span> : <span>save</span> }
+                                <SaveAllIcon size={18} />
+                                {loading ? <span className="loading loading-spinner loading-lg"></span> : <span>save</span>}
                             </button>
                             <button
-                            onClick={handleDelete}
+                                onClick={()=> document.getElementById("delete_event_modal").showModal}
                                 className="btn btn-warning w-full"
                                 disabled={!formData.title || !formData.location}
                             >
-                                <Trash2 size={18}/>
+                                <Trash2 size={18} />
                                 delete
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
+            <dialog id="delete_event_modal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">{formData.title || "none"}</h3>
+                    <p className="py-4">Are you sure you want to delete this event?</p>
+                    <div className="modal-action">
+                        <form method="dialog">
+                            {/* if there is a button in form, it will close the modal */}
+                            <button
+                                className="btn"
+                            >Cancel</button>
+                        </form>
+                        <button
+                            className="btn btn-error"
+                            onClick={async () => {handleDelete}
+                            }
+
+                        >
+                            {loading ?
+                                <span className="loading loading-spinner loading-lg"></span> :
+                                <>
+                                    <Trash2 className="w-4 h-4" />
+                                    Delete
+                                </>
+
+                            }
+                        </button>
+                    </div>
+                </div>
+            </dialog>
         </div>
     );
 }

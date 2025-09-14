@@ -1,6 +1,6 @@
 import React from 'react'
 import{Link} from 'react-router-dom'
-import {Plus, Users, Award, Settings, BarChart3, Calendar, FileText, Camera} from 'lucide-react'
+import {Plus, Users, Award, Settings, BarChart3, Calendar, FileText, Camera, ArrowBigRight, ArrowRight} from 'lucide-react'
 import { useAdminEventStore } from '../../stores/useAdminEventsStore'
 
 function AdminPanelPage() {
@@ -68,8 +68,9 @@ const {events, getAttendance, getAttendanceById, attendances} =  useAdminEventSt
               </div>
               <div className="card-actions justify-end">
                 <button className="btn btn-primary btn-sm">
-                  <Plus className="w-4 h-4 mr-2" />
+                  
                   Add Event
+                  <ArrowRight className="w-4 h-4 mr-2" />
                 </button>
               </div>
             </div>
@@ -85,10 +86,14 @@ const {events, getAttendance, getAttendanceById, attendances} =  useAdminEventSt
                 </div>
               </div>
               <div className="card-actions justify-end">
-                <button className="btn btn-primary btn-sm">
-                  <Plus className="w-4 h-4 mr-2" />
+                <Link 
+                    to="/blogs/create"
+                    className="btn btn-primary btn-sm"
+                    onClick={e => {e.stopPropagation()}}
+                    >
                   New Post
-                </button>
+                  <ArrowRight className="w-4 h-4 mr-2" />
+                </Link>
               </div>
             </div>
           </Link>
@@ -105,6 +110,7 @@ const {events, getAttendance, getAttendanceById, attendances} =  useAdminEventSt
               <div className="card-actions justify-end">
                 <button className="btn btn-primary btn-sm">
                   Record Attendance
+                  <ArrowRight className="w-4 h-4 mr-2" />
                 </button>
               </div>
             </div>
@@ -121,8 +127,8 @@ const {events, getAttendance, getAttendanceById, attendances} =  useAdminEventSt
               </div>
               <div className="card-actions justify-end">
                 <button className="btn btn-primary btn-sm">
-                  <Plus className="w-4 h-4 mr-2" />
                   Upload Photos
+                  <ArrowRight className="w-4 h-4 mr-2" />
                 </button>
               </div>
             </div>
@@ -140,6 +146,7 @@ const {events, getAttendance, getAttendanceById, attendances} =  useAdminEventSt
               <div className="card-actions justify-end">
                 <button className="btn btn-primary btn-sm">
                   View Members
+                  <ArrowRight className="w-4 h-4 mr-2" />
                 </button>
               </div>
             </div>
@@ -157,6 +164,7 @@ const {events, getAttendance, getAttendanceById, attendances} =  useAdminEventSt
               <div className="card-actions justify-end">
                 <button className="btn btn-primary btn-sm">
                   View Reports
+                  <ArrowRight className="w-4 h-4 mr-2" />
                 </button>
               </div>
             </div>

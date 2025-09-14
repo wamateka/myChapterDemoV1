@@ -112,7 +112,7 @@ function AdminEvents() {
                               className="btn btn-ghost btn-sm text-error"
                               onClick={() => {
                                 setEventToDelete(event);
-                                document.getElementById("delete_modal").showModal()
+                                document.getElementById("delete_event_modal").showModal()
                               }
                               }
 
@@ -130,7 +130,7 @@ function AdminEvents() {
           </div>
         </div>
       </div>
-      <dialog id="delete_modal" className="modal">
+      <dialog id="delete_event_modal" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">{eventToDelete?.title || "none"}</h3>
           <p className="py-4">Are you sure you want to delete this event?</p>
@@ -147,7 +147,6 @@ function AdminEvents() {
             <button
               className="btn btn-error"
               onClick={async () => {
-                console.log(eventToDelete.event_id)
                 await deleteEvent(eventToDelete.event_id)
                 document.getElementById("delete_modal").close()
                 fetchEvents()

@@ -12,6 +12,7 @@ export default function CreateEventPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if(type === 'file'){
@@ -36,8 +37,8 @@ export default function CreateEventPage() {
         end_datetime: new Date(formData.end_datetime).toISOString(),
     })
     await createEvent();
+    navigate("/admin/blogs");
     resetFormData();
-
   };
 
   return (

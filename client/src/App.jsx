@@ -24,11 +24,13 @@ import ProfilePage from './pages/ProfilePage'
 import DashBoardPageCopy from './pages/DashboardPageCopy'
 import CreateEventPage from './pages/Admin/CreateEvent'
 import EditEventPage from './pages/Admin/EditEventPage'
+import CreateBlog from './pages/Admin/CreateBlog'
+import EditBlog from './pages/Admin/EditBlog'
 function App() {
 
   return (
     <AuthProvider >
-    <div className="min-h-screen bg-base-200 transition-colors duration-300" data-theme="mytheme_dark">
+    <div className="min-h-screen bg-base-200 transition-colors duration-300" data-theme="mytheme_light">
       <NavBar/>
       <Routes>
       <Route path='/' element={<HomePage />} />
@@ -92,6 +94,18 @@ function App() {
       <Route path= '/admin/blogs'  element={
         <ProtectedRoutes requireAdmin>
           <AdminBlogs/>
+        </ProtectedRoutes>
+        
+      }/>
+      <Route path= '/blogs/create'  element={
+        <ProtectedRoutes requireAdmin>
+          <CreateBlog/>
+        </ProtectedRoutes>
+        
+      }/>
+      <Route path= '/admin/blogs/edit/:id'  element={
+        <ProtectedRoutes requireAdmin>
+          <EditBlog/>
         </ProtectedRoutes>
         
       }/>

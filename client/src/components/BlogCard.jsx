@@ -19,7 +19,7 @@ function BlogCard(post) {
 
       {/* Post Content */}
       <div className="mb-4">
-        <p className="text-white whitespace-pre-wrap">{post.content}</p>
+        <p className="whitespace-pre-wrap">{post.content}</p>
         {post.image_url && (
           <img
             src={post.image_url}

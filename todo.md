@@ -3,6 +3,7 @@
 - spinner for loading galler
 - add photo information on hover
 - bigger photo view on click
+- uploadImageModal edit
 # dashboard
 - optimize dashboard
 - style better dashboard content and layout
