@@ -20,11 +20,13 @@ import './passport-config.js';
 // Importing environment variables
 import dotenv from 'dotenv';
 import  session  from 'express-session';
+
+import path from 'path';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
-
+const PORT = process.env.PORT || 3000;
+const __dirname = path.resolve();
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -57,6 +59,18 @@ app.use('/api/gallery', galleryRoutes);
 app.use('/api/committee', committeeRoutes);
 app.use('/api/attendances', attendanceRoutes);
 app.use('/api/pointslogs', pointsLogRoutes);
+
+
+  app.use(express.static(path.join(__dirname,"./client/dist")));
+  console.log("Static files served from:",path.join(__dirname,"./client/dist"))
+
+app.use("", (req, res) => {
+  console.log("catch all route")
+  console.log("Path: ",path.join(__dirname, "client", "dist", "index.html"))
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+
+});
+
 
 if(sql){
   app.listen(PORT, () => {

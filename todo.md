@@ -30,4 +30,11 @@
 - update the profile picture api so that it deletes the old picture 
     *you might have to change the function in cloudinary
 # cloudinary
-- make sure images CRUD operations sync with database
+- make sure images CRUD operations sync with 
+
+# Production
+- configure the backend for produciton
+- json file, configure commands for build(installing packages and building vite) and start(start the server )
+- configure the server file for production
+    - add static files from frontend
+

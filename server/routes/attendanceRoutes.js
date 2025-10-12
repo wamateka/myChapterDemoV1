@@ -1,5 +1,5 @@
 import express from 'express';
-import{getAttendances, getAttendanceById, getAttendanceByStatus, getAttendancesByEventId, getAttendancesByMemberId} from '../controllers/attendanceController.js';
+import{getAttendances, getAttendanceById, getAttendanceByStatus, getAttendancesByEventId, getAttendancesByMemberId, addAttendanceRecord} from '../controllers/attendanceController.js';
 
 const router = express.Router();
 
@@ -8,5 +8,5 @@ router.get('/:id', getAttendanceById);
 router.get('/status/:status', getAttendanceByStatus);
 router.get('/event/:eventId', getAttendancesByEventId);
 router.get('/member/:memberId', getAttendancesByMemberId);
-
+router.post('/member', addAttendanceRecord);
 export default router;

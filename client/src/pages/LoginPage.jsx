@@ -2,34 +2,40 @@ import React from "react";
 import { useLoginStore } from "../stores/useLoginStore";
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
-import { useNavigate, Link } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 
 function LoginPage() {
-    const { user,login, logingUser, loadingUser} = useAuth()
+    const { user, login, logingUser, loadingUser,changeUserState} = useAuth()
     const { loading, formData, loginUser, setformData } = useLoginStore();
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate()
-    useEffect(()=>{
-        if(user){
+    useEffect(() => {
+        if (user) {
+            // console.log("you logged in ...")
+            changeUserState(false)
             navigate('/dashboard')
-        }else{
+        } else {
+            // console.log("login bro")    
             console.log(user)
         }
+
+    }, [user])
+
+    if (logingUser || loadingUser) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="loading loading-spinner loading-lg"></div>
+            </div>
+        )
+    }
+
+    if (user) return <Navigate to="/dashboard" replace />;
+
+    return (
         
-    },[user])
-
-      if (logingUser || loadingUser) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
-    )
-  }
-
-    return (
         <div className="min-h-screen flex items-center justify-center bg-base-200 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
                 <div className="text-center">

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useGalleryStore } from '../stores/useGalleryStore'
 import { Plus } from 'lucide-react'
-import UploadImageModal from '../components/uploadImageModal';
+import UploadImageModal from '../components/UploadImageModal';
 
 function GalleryPage() {
     const { fetchGallery, gallery, loading } = useGalleryStore();

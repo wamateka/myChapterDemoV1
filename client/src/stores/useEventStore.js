@@ -105,6 +105,7 @@ export const useEventStore = create((set, get) => ({
       set({ loading: false });
     }
   },
+  ///the function below is not in use
   getAttendance: async () => {
     set({ loading: true });
     try {

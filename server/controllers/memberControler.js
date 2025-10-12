@@ -14,7 +14,30 @@ export const getMembers = async (req, res) => {
     res.status(500).json({ message: "error", error: error.message });
   }
 };
-
+export const getMembersList = async (req, res) => {
+  try {
+    const members = await sql`
+            SELECT member_id, first_name, last_name FROM Members
+            ORDER BY last_name, first_name;
+        `;
+    res.status(200).json({ message: "success", data: members });
+  } catch (error) {
+    console.error("Error fetching members:", error);
+    res.status(500).json({ message: "error", error: error.message });
+  }
+};
+export const getMemberCount = async(req,res) =>{
+  try{
+    const count = await sql`
+        SELECT COUNT(*)
+        FROM members;
+    `;
+    res.status(200).json({ message: "success", data: count[0] });
+  }catch(err){
+      console.error("Error fetching members:", err);
+      res.status(500).json({ message: "error", error: err.message });
+  }
+}
 export const getLeaderboard = async (req, res) => {
   try {
     const list = await sql`

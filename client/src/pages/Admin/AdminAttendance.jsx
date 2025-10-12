@@ -1,27 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import { useEventStore } from '../../stores/useEventStore'
 import { useAttendanceStore } from '../../stores/useAttendanceStore';
-import { Award, Users, CheckCircle, XCircle, Plus, ArrowLeftIcon } from 'lucide-react'
+import { Award, Users, CheckCircle, XCircle, Star, Activity, Plus, ArrowLeftIcon } from 'lucide-react'
 import { Navigate, useNavigate } from 'react-router-dom';
+import {useMemberStore} from '../../stores/useMemberStore';
+import AddRecordModal from '../../components/AddRecordModal';
 function AdminAttendance() {
-    const {events,fetchEvents} = useEventStore();
-    const {fetchAttendances, attendances, loading,  memberAttendance,eventAttendance, fetchEventAttendance}  = useAttendanceStore();
-    const [selectedEvent, setSelectedEvent] = useState(null);
-    const navigate = useNavigate();
-    useEffect(()=>{
-        fetchEvents();
-        fetchAttendances();
-    },[])
-    function handleEventSelect(event){
-        setSelectedEvent(event);
-        fetchEventAttendance(event.event_id);
-    }
+  const { events, fetchEvents } = useEventStore();
+  const {eventAttendance, fetchEventAttendance } = useAttendanceStore();
+  const  {getMemberCount, memberCount} = useMemberStore()
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [records, setRecords] = useState();
+  const navigate = useNavigate(null);
+  const totalMembers = 10;
+  useEffect(() => {
+    getMemberCount();
+    fetchEvents();
+  }, [])
 
-    
-  return ( 
-        <div className="min-h-screen bg-base-200 py-8">
-          <button onClick = {() =>{navigate("/admin")}}className='btn btn-ghost mb-8'>
-        <ArrowLeftIcon className='size-4 mr-2'/>
+  function handleEventSelect(event) {
+    setSelectedEvent(event);
+    fetchEventAttendance(event.event_id);
+    console.log("event attendance: ", eventAttendance)
+  }
+  function setFilter(filter){
+    if (filter === 'all'){
+      setRecords(eventAttendance)
+    }else if(filter == 'rsvpd'){
+      setRecords(
+        eventAttendance.filter((e) => e)
+      )      
+    }
+  }
+
+
+  return (
+    <div className="min-h-screen bg-base-200 py-8">
+      <button onClick={() => { navigate("/admin") }} className='btn btn-ghost mb-8'>
+        <ArrowLeftIcon className='size-4 mr-2' />
         Back to admin page
       </button>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,16 +58,15 @@ function AdminAttendance() {
                     <button
                       key={event.event_id}
                       onClick={() => handleEventSelect(event)}
-                      className={`w-full text-left p-3 rounded-lg border ${
-                        selectedEvent?.event_id === event.event_id
-                          ? 'border-primary bg-primary/10'
-                          : 'border-base-300 hover:border-primary/50'
-                      }`}
+                      className={`w-full text-left p-3 rounded-lg border ${selectedEvent?.event_id === event.event_id
+                        ? 'border-primary bg-primary/10'
+                        : 'border-base-300 hover:border-primary/50'
+                        }`}
                     >
                       <div className="font-semibold">{event.title}</div>
                       <div className="text-sm text-base-content/70">
-                        {new Date(event.event_date).toLocaleDateString().slice(0,10)}
-                      </div>
+                        {new Date(event.event_date).toLocaleDateString().slice(0, 10)}
+                      </div>                                                                                                                                                                                                                                                                                                                                                                       
                       <div className="text-xs text-base-content/50">
                         {event.location || 'Location TBD'}
                       </div>
@@ -61,7 +76,6 @@ function AdminAttendance() {
               </div>
             </div>
           </div>
-
           {/* Attendance Records */}
           <div className="lg:col-span-2">
             <div className="card bg-base-100 shadow-xl">
@@ -90,72 +104,134 @@ function AdminAttendance() {
                     <p className="text-base-content/70">
                       No attendance has been recorded for this event yet
                     </p>
-                    <button className="btn btn-primary mt-4">
+                    <button className="btn btn-primary mt-4" onClick={()=>{document.getElementById("add_record").showModal()}}>
                       <Plus className="w-4 h-4 mr-2" />
                       Record Attendance
                     </button>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <div className="stats stats-horizontal shadow">
-                        <div className="stat">
-                          <div className="stat-title">Total</div>
-                          <div className="stat-value">{eventAttendance.length}</div>
-                        </div>
-                        <div className="stat">
-                          <div className="stat-title">Attended</div>
-                          <div className="stat-value text-success">
-                            {eventAttendance.filter(a => a.status === 'present').length}
+                    <div className="flex flex-row justify-between items-center">
+                      {/* Stats section */}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+                        <div className="stat bg-base-100 rounded-lg shadow p-3 flex items-center gap-3">
+                          <Users className="w-6 h-6 text-info" />
+                          <div>
+                            <div className="text-xs text-base-content/70">RSVP</div>
+                            <div className="text-lg font-bold">{selectedEvent.rsvp_count}</div>
                           </div>
                         </div>
-                        <div className="stat">
-                          <div className="stat-title">Points Awarded</div>
-                          <div className="stat-value text-primary">
-                            {eventAttendance.reduce((sum, a) => sum + a.points_value, 0)|| 0}
+                        <div className="stat bg-base-100 rounded-lg shadow p-3 flex items-center gap-3">
+                          <CheckCircle className="w-6 h-6 text-success" />
+                          <div>
+                            <div className="text-xs text-base-content/70">Attended</div>
+                            <div className="text-lg font-bold">
+                              {eventAttendance.filter((a) => a.status === 'present' ).length}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="stat bg-base-100 rounded-lg shadow p-3 flex items-center gap-3">
+                          <XCircle className="w-6 h-6 text-error" />
+                          <div>
+                            <div className="text-xs text-base-content/70">Missed</div>
+                            <div className="text-lg font-bold">
+                            {memberCount-selectedEvent.rsvp_count}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="stat bg-base-100 rounded-lg shadow p-3 flex items-center gap-3">
+                          <Star className="w-6 h-6 text-accent" />
+                          <div>
+                            <div className="text-xs text-base-content/70">Points</div>
+                            <div className="text-lg font-bold">
+                              {eventAttendance.reduce((sum, a) => sum + a.point_value, 0)}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="stat bg-base-100 rounded-lg shadow p-3 flex items-center gap-3">
+                          <Activity className="w-6 h-6 text-info" />
+                          <div>
+                            <div className="text-xs text-base-content/70">Commitment</div>
+                            <div className="text-lg font-bold">
+                              {selectedEvent.rsvp_count > 0
+                                ? `${Math.round(
+                                  (eventAttendance.filter((a) => a.status === "present").length /
+                                    selectedEvent.rsvp_count) *
+                                  100
+                                )}%`
+                                : "—"}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="stat bg-base-100 rounded-lg shadow p-3 flex items-center gap-3">
+                          <Users className="w-6 h-6 text-warning" />
+                          <div>
+                            <div className="text-xs text-base-content/70">Engagement</div>
+                            <div className="text-lg font-bold">
+                              {memberCount > 0
+                                ? `${Math.round(
+                                  (eventAttendance.filter((a) => a.status === "present").length /
+                                    memberCount) *
+                                  100
+                                )}%`
+                                : "—"}
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <button className="btn btn-primary btn-sm">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Record
+
+                    </div>
+                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex flex-wrap gap-2">
+                      <button onClick={() => setFilter("all")} className="btn btn-xs btn-outline">
+                        All
+                      </button>
+                      <button onClick={() => setFilter("attended")} className="btn btn-xs btn-outline">
+                        Attended
+                      </button>
+                      <button onClick={() => setFilter("rsvp")} className="btn btn-xs btn-outline">
+                        RSVP'd
+                      </button>
+                      <button onClick={() => setFilter("missed")} className="btn btn-xs btn-outline">
+                        Missed
+                      </button>
+                      <button onClick={() => setFilter("noRsvp")} className="btn btn-xs btn-outline">
+                        No RSVP
                       </button>
                     </div>
-
+                    <button className="btn btn-primary btn-sm" onClick={()=>{document.getElementById("add_record").showModal()} }>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Record
+                    </button>
+                  </div>
                     <div className="overflow-x-auto">
                       <table className="table table-zebra">
                         <thead>
                           <tr>
                             <th>Member</th>
-                            <th>Email</th>
                             <th>Attended</th>
                             <th>Points</th>
-                            <th>Notes</th>
-                            <th>Actions</th>
+                            <th>check_in</th>
+                            <th>Actions</th>                            
                           </tr>
                         </thead>
                         <tbody>
-                          {eventAttendance.map((record) => (
-                            <tr key={record.event_id}>
+                          {eventAttendance.map((record, index) => (
+                            <tr key={record.attendance_id}>
                               <td>
                                 <div className="font-semibold">
-                                  {record.first_name} {record.last_name}
+                                 {index +1 }. {record.first_name} {record.last_name}
                                 </div>
                               </td>
-                              <td>{record.email}</td>
                               <td>
-                                {record.attended ? (
+                                {record.status === 'present' ? (
                                   <CheckCircle className="w-5 h-5 text-success" />
                                 ) : (
                                   <XCircle className="w-5 h-5 text-error" />
                                 )}
                               </td>
-                              <td>{record.points_earned} pts</td>
-                              <td>
-                                <span className="text-sm text-base-content/70">
-                                  {record.notes || '-'}
-                                </span>
-                              </td>
+                              <td>{record.point_value} pts</td>
+                              <td>{new Date(record.checked_in_at).toLocaleTimeString() || 'none'}</td>
                               <td>
                                 <div className="flex gap-2">
                                   <button className="btn btn-ghost btn-sm">
@@ -178,8 +254,11 @@ function AdminAttendance() {
           </div>
         </div>
       </div>
+      <AddRecordModal event_id= {selectedEvent?.event_id}/>
     </div>
   )
 }
 
 export default AdminAttendance
+
+

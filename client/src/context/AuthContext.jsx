@@ -11,22 +11,27 @@ export const AuthProvider = ({ children }) => {
     const [logingUser, setLoginguser] = useState(false);
 
     useEffect(() => {
+        console.log("loading user .. ")
         setLoadingUser(true)
         api.get('/auth/me', {withCredentials: true})
             .then(res => setUser(res.data))
             .then(setLoadingUser(false))
             .catch(() => setUser(null))
+        
     }, [])
 
     const checkMe = async() => {
+        console.log("loading user .. ")
         setLoadingUser(true)
         const res = await api.get('auth/me', {withCredentials: true})
         setUser(res.data)
         setLoadingUser(false)
+        setLoginguser(false)
     }
 
     const login = async (email, password) => {
         setLoginguser(true)
+        console.log("loging user..")
         try{
         const res = await api.post('/auth/login', {email,password})
         setUser(res.data.user);
@@ -46,13 +51,18 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         setLoadingUser(false)
     }
+    const changeUserState = (state) => {
+        setLoadingUser(state)
+        setLoginguser(state)
+    }
     const value = {
         user,
         login,
         logout,
         checkMe,
+        changeUserState,
         loadingUser,
-        logingUser,
+        logingUser,        
         isAdmin: user?.role === 'admin'
     }
     return(

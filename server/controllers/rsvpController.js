@@ -1,7 +1,20 @@
 import {sql} from '../db/dbConnection.js'
 
 export const getRsvps = async (req,res) =>{
-    const {event_id} = req.query
+    const {id} = req.params
+
+    try{
+        const rsvps = await sql`
+        SELECT m.member_id, m.first_name, m.last_name 
+        FROM members m 
+        JOIN rsvp r ON m.member_id = r.member_id 
+        WHERE r.event_id = ${id}
+        `
+        res.status(200).json({ message: "success", data: rsvps[0] });
+    }catch(error){
+        console.log("error getting rsvp list: ", error)
+        res.status(500).json(res.status(500).json({ message: "error", error: error.message }))
+    }
 }
 
 

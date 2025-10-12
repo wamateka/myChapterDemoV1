@@ -37,7 +37,7 @@ export default function CreateEventPage() {
         end_datetime: new Date(formData.end_datetime).toISOString(),
     })
     await createEvent();
-    navigate("/admin/blogs");
+    navigate("/admin/events");
     resetFormData();
   };
 

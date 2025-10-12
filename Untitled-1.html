@@ -1,0 +1,247 @@
+import React, { useState } from "react";
+import { Users, CheckCircle, XCircle, Star, Activity, Plus } from "lucide-react";
+
+export default function AttendanceManagement() {
+  // dummy events
+  const events = [
+    { event_id: 1, title: "General Body Meeting", event_date: "2025-09-01", location: "Main Hall", rsvp_count: 12 },
+    { event_id: 2, title: "Workshop: React Basics", event_date: "2025-09-10", location: "Room 202", rsvp_count: 8 },
+    { event_id: 3, title: "Networking Night", event_date: "2025-09-15", location: "Auditorium", rsvp_count: 20 },
+  ];
+
+  // dummy attendance data
+  const allAttendance = {
+    1: [
+      { event_id: 1, first_name: "Alice", last_name: "Johnson", attended: true, rsvp: true, points_value: 5 },
+      { event_id: 1, first_name: "Bob", last_name: "Smith", attended: false, rsvp: true, points_value: 0 },
+      { event_id: 1, first_name: "Charlie", last_name: "Lee", attended: false, rsvp: false, points_value: 0 },
+      { event_id: 1, first_name: "Diana", last_name: "Miller", attended: true, rsvp: false, points_value: 5 },
+    ],
+    2: [
+      { event_id: 2, first_name: "Eve", last_name: "Adams", attended: true, rsvp: true, points_value: 5 },
+      { event_id: 2, first_name: "Frank", last_name: "Baker", attended: false, rsvp: true, points_value: 0 },
+    ],
+    3: [],
+  };
+
+  const totalMembers = 50;
+
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [filter, setFilter] = useState("all");
+
+  const eventAttendance = selectedEvent ? allAttendance[selectedEvent.event_id] || [] : [];
+
+  // filter logic
+  const filteredRecords = eventAttendance.filter((record) => {
+    if (filter === "all") return true;
+    if (filter === "attended") return record.attended;
+    if (filter === "rsvp") return record.rsvp;
+    if (filter === "missed") return record.rsvp && !record.attended;
+    if (filter === "noRsvp") return !record.rsvp;
+    return true;
+  });
+
+  return (
+    <div className="min-h-screen bg-base-200 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Event Selection */}
+        <div className="lg:col-span-1">
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body">
+              <h2 className="card-title">Select Event</h2>
+              <div className="space-y-2">
+                {events.map((event) => (
+                  <button
+                    key={event.event_id}
+                    onClick={() => setSelectedEvent(event)}
+                    className={`w-full text-left p-3 rounded-lg border ${
+                      selectedEvent?.event_id === event.event_id
+                        ? "border-primary bg-primary/10"
+                        : "border-base-300 hover:border-primary/50"
+                    }`}
+                  >
+                    <div className="font-semibold">{event.title}</div>
+                    <div className="text-sm text-base-content/70">
+                      {new Date(event.event_date).toLocaleDateString()}
+                    </div>
+                    <div className="text-xs text-base-content/50">
+                      {event.location || "Location TBD"}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Attendance Records */}
+        <div className="lg:col-span-2">
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body">
+              <h2 className="card-title">
+                Attendance Records
+                {selectedEvent && (
+                  <span className="text-sm font-normal text-base-content/70">
+                    – {selectedEvent.title}
+                  </span>
+                )}
+              </h2>
+
+              {!selectedEvent ? (
+                <div className="text-center py-8">
+                  <Users className="w-16 h-16 text-base-content/30 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">Select an Event</h3>
+                  <p className="text-base-content/70">
+                    Choose an event from the list to view and manage attendance
+                  </p>
+                </div>
+              ) : eventAttendance.length === 0 ? (
+                <div className="text-center py-8">
+                  <Users className="w-16 h-16 text-base-content/30 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No attendance records</h3>
+                  <p className="text-base-content/70">
+                    No attendance has been recorded for this event yet
+                  </p>
+                  <button className="btn btn-primary mt-4">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Record Attendance
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+                    <div className="stat bg-base-100 rounded-lg shadow p-3 flex items-center gap-3">
+                      <Users className="w-6 h-6 text-info" />
+                      <div>
+                        <div className="text-xs text-base-content/70">RSVP</div>
+                        <div className="text-lg font-bold">{selectedEvent.rsvp_count}</div>
+                      </div>
+                    </div>
+                    <div className="stat bg-base-100 rounded-lg shadow p-3 flex items-center gap-3">
+                      <CheckCircle className="w-6 h-6 text-success" />
+                      <div>
+                        <div className="text-xs text-base-content/70">Attended</div>
+                        <div className="text-lg font-bold">
+                          {eventAttendance.filter((a) => a.attended).length}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="stat bg-base-100 rounded-lg shadow p-3 flex items-center gap-3">
+                      <XCircle className="w-6 h-6 text-error" />
+                      <div>
+                        <div className="text-xs text-base-content/70">Missed</div>
+                        <div className="text-lg font-bold">
+                          {eventAttendance.filter((a) => a.rsvp && !a.attended).length}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="stat bg-base-100 rounded-lg shadow p-3 flex items-center gap-3">
+                      <Star className="w-6 h-6 text-accent" />
+                      <div>
+                        <div className="text-xs text-base-content/70">Points</div>
+                        <div className="text-lg font-bold">
+                          {eventAttendance.reduce((sum, a) => sum + a.points_value, 0)}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="stat bg-base-100 rounded-lg shadow p-3 flex items-center gap-3">
+                      <Activity className="w-6 h-6 text-info" />
+                      <div>
+                        <div className="text-xs text-base-content/70">Commitment</div>
+                        <div className="text-lg font-bold">
+                          {selectedEvent.rsvp_count > 0
+                            ? `${Math.round(
+                                (eventAttendance.filter((a) => a.attended).length /
+                                  selectedEvent.rsvp_count) *
+                                  100
+                              )}%`
+                            : "—"}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="stat bg-base-100 rounded-lg shadow p-3 flex items-center gap-3">
+                      <Users className="w-6 h-6 text-warning" />
+                      <div>
+                        <div className="text-xs text-base-content/70">Engagement</div>
+                        <div className="text-lg font-bold">
+                          {totalMembers > 0
+                            ? `${Math.round(
+                                (eventAttendance.filter((a) => a.attended).length /
+                                  totalMembers) *
+                                  100
+                              )}%`
+                            : "—"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Filters + Add Record */}
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="flex flex-wrap gap-2">
+                      <button onClick={() => setFilter("all")} className="btn btn-xs btn-outline">
+                        All
+                      </button>
+                      <button onClick={() => setFilter("attended")} className="btn btn-xs btn-outline">
+                        Attended
+                      </button>
+                      <button onClick={() => setFilter("rsvp")} className="btn btn-xs btn-outline">
+                        RSVP’d
+                      </button>
+                      <button onClick={() => setFilter("missed")} className="btn btn-xs btn-outline">
+                        Missed
+                      </button>
+                      <button onClick={() => setFilter("noRsvp")} className="btn btn-xs btn-outline">
+                        No RSVP
+                      </button>
+                    </div>
+                    <button className="btn btn-primary btn-sm">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Record
+                    </button>
+                  </div>
+
+                  {/* Table */}
+                  <div className="overflow-x-auto">
+                    <table className="table table-zebra">
+                      <thead>
+                        <tr>
+                          <th>Member</th>
+                          <th>Attended</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredRecords.map((record, idx) => (
+                          <tr key={`${record.event_id}-${idx}`}>
+                            <td className="font-semibold">
+                              {record.first_name} {record.last_name}
+                            </td>
+                            <td>
+                              {record.attended ? (
+                                <CheckCircle className="w-5 h-5 text-success" />
+                              ) : (
+                                <XCircle className="w-5 h-5 text-error" />
+                              )}
+                            </td>
+                            <td>
+                              <div className="flex gap-2">
+                                <button className="btn btn-ghost btn-sm">Edit</button>
+                                <button className="btn btn-ghost btn-sm text-error">Delete</button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
