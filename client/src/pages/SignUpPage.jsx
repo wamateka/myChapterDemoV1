@@ -25,7 +25,7 @@ function SignUpPage() {
         }else{
           console.log(user)
         }
-    }, [formData.validated]);
+    }, [formData.validated,user]);
     function onSubmit(data) {
         console.log(data);
     }
