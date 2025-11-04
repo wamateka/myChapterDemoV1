@@ -2,7 +2,7 @@
 - indicator of empty gallery
 - spinner for loading galler
 - add photo information on hover
-- bigger photo view on click
+- bigger photo view on click - slide show
 - uploadImageModal edit
 # dashboard
 - optimize dashboard
@@ -37,4 +37,5 @@
 - json file, configure commands for build(installing packages and building vite) and start(start the server )
 - configure the server file for production
     - add static files from frontend
+
 

@@ -1,6 +1,32 @@
-import React from 'react'
-import { CalendarDays, MapPin, Users, Award, Clock, ArrowRight, HandCoins, Watch } from 'lucide-react';
+import React, { useEffect, useState } from 'react'
+import { CalendarDays, MapPin, Users, Award, Clock, ArrowRight, HandCoins, Watch, CrossIcon, X } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useRSVPStore } from '../stores/useRSVPStore';
 function DisplayEventCard(props) {
+  const {user} = useAuth();
+  const { getEventRsvpStatus, loading_rsvp_status, setMemberRsvpStatus } = useRSVPStore();
+  const [rsvp_status, set_rsvp_status] = useState();
+  const [rsvp_count, set_rsvp_count] = useState();
+  useEffect(()=>{
+    const setRsvp = async () => {
+      const s =  await getEventRsvpStatus(user.member_id, props.id)
+      set_rsvp_status(s)
+    };
+    set_rsvp_count(props.rsvp_count);
+    setRsvp();
+  },[])
+  async function handleRsvp(member_id, event_id, status){
+    set_rsvp_status('')
+    await setMemberRsvpStatus(member_id, event_id, status);
+    const newStatus = await getEventRsvpStatus(member_id,event_id);
+    if(status ==="attending"){
+      set_rsvp_count(rsvp_count+1);
+    }else{
+      set_rsvp_count(rsvp_count-1);
+    }
+    set_rsvp_status(newStatus)
+
+  }
   return (
     <div className="card bg-base-100 w-96 shadow-xl hover:shadow-2xl transition-all duration-300 
     rounded-2xl border border-base-200 
@@ -63,7 +89,7 @@ function DisplayEventCard(props) {
             <span>
               {props.status.status === "past"
                 ? `${props?.attendees} attended`
-                : `${props.rsvp_count} coming`}
+                : `${rsvp_count} coming`}
             </span>
           </div>
 
@@ -86,12 +112,26 @@ function DisplayEventCard(props) {
 
         {/* RSVP Button */}
         {props.status.status !== "past" && (
-          <div className="card-actions justify-end mt-6">
-            <button className="btn btn-primary btn-sm px-4 gap-2 shadow-md hover:scale-105 transition">
-              RSVP
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+          rsvp_status ?
+            (
+              <div className='card-actions justify-end mt-6'>
+                <button className="btn btn-primary btn-sm px-4 gap-2 shadow-md hover:scale-105 transition" 
+                disabled={rsvp_status == 'attending'}
+                  onClick={async () => { await handleRsvp(user.member_id, props.id, 'attending') }}>
+                  RSVP
+                <ArrowRight className="w-4 h-4" />
+                </button>
+                {(rsvp_status == "attending") &&
+                  (<button className="btn btn-warning btn-sm px-4 gap-2 shadow-md hover:scale-105 transition"
+                    onClick={async () => { await handleRsvp(user.member_id, props.id, 'not attending') }}>
+                    cancel
+                  <X className="w-4 h-4"/>
+                  </button>)}
+              </div>
+            ) :
+            (
+              <span className="loading loading-spinner loading-lg"></span>
+            )
         )}
       </div>
     </div>
@@ -99,3 +139,10 @@ function DisplayEventCard(props) {
 }
 
 export default DisplayEventCard
+
+// {          <div className="card-actions justify-end mt-6">
+//             <button className="btn btn-primary btn-sm px-4 gap-2 shadow-md hover:scale-105 transition">
+//               RSVP
+//               <ArrowRight className="w-4 h-4" />
+//             </button>
+//           </div> }

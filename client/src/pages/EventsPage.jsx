@@ -3,31 +3,36 @@ import { useEffect } from 'react';
 import { useEventStore } from '../stores/useEventStore';
 import DisplayEventCard from '../components/DisplayEventCard';
 import { Badge } from 'lucide-react';
+import { useRSVPStore } from '../stores/useRSVPStore';
 
 function EventsPage() {
   const { filter, setFilter, events, filteredEvents, loading, error, fetchEvents, filterEvents } = useEventStore();
+  const { getEventRsvpStatus, loading_rsvp_status, setMemberRsvpStatus } = useRSVPStore()
+  const { setMemberRsvp } = useRSVPStore();
   useEffect(() => {
     setFilter('all')
     fetchEvents();
   }, [fetchEvents]);
-  const handleFilterChange = (newFilter) => {
+
+
+  function handleFilterChange(newFilter){
     setFilter(newFilter);
     filterEvents();
   };
-  const getEventStatus = (e) => {
+  function getEventStatus(e){
     const today = new Date().toISOString().slice(0, 10);
     const eventDay = new Date(e.start_datetime).toISOString().slice(0, 10);
 
     if (eventDay > today) {
-      return {status: 'upcoming', badge: 'info'}
+      return { status: 'upcoming', badge: 'info' }
     } else if (eventDay !== today) {
-      return {status: 'past', badge: 'warning'}
-    } else if (eventDay === today){
-      return {status: 'ongoing', badge: 'primary'}
+      return { status: 'past', badge: 'warning' }
+    } else if (eventDay === today) {
+      return { status: 'ongoing', badge: 'primary' }
     }
   }
 
-    if (loading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="loading loading-spinner loading-lg"></div>
@@ -95,18 +100,20 @@ function EventsPage() {
             {filteredEvents?.map(e => (
               <DisplayEventCard
                 key={e.event_id}
+                id = {e.event_id}
                 imgUrl={e.poster_img_url}
                 title={e.title}
                 description={e.description}
                 status={getEventStatus(e)}
                 date={new Date(e.start_datetime).toLocaleDateString()}
-                start_time = {new Date(e.start_datetime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })}
-                end_time = {new Date(e.end_datetime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })}
+                start_time={new Date(e.start_datetime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })}
+                end_time={new Date(e.end_datetime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })}
                 location={e.location}
                 rsvp_count={e.rsvp_count}
                 max_attendee={e.max_attendee}
-                points = {e.point_value}
-                attendees = {e.attendee_count}
+                points={e.point_value}
+                attendees={e.attendee_count}
+                rsvp_status={e.status}
               />
             ))
             }

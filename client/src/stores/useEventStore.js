@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import api from "../api";
 export const useEventStore = create((set, get) => ({
   filter: "all",
-  filterdEvents: [],
+  filteredEvents: [],
   events: [],
   Attendances: [],
   loading: false,

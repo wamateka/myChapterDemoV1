@@ -4,6 +4,7 @@ import { Edit, Save, User, Phone, GraduationCap, Award, Calendar, MapPin, Ticket
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { useEventStore } from '../stores/useEventStore'
+import { useRSVPStore } from '../stores/useRSVPStore'
 // Reusable Stat Card
 function StatCard({ label, value, icon, color }) {
   return (
@@ -30,39 +31,60 @@ function Card({ title, children }) {
 function DashBoardPage() {
   const { user, loadingUser } = useAuth();
   const { filter, filteredEvents, fetchEvents, setFilter, filterEvents } = useEventStore();
-  const { stats, getStats, getEventRsvpStatus, loading_rsvp_status } = useUserStore();
+  const { stats, getStats } = useUserStore();
+  const { getEventRsvpStatus, loading_rsvp_status, setMemberRsvpStatus } = useRSVPStore();
+  const [events, setEvents] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
-    // console.log(user);
     const loadData = async () => {
       await fetchEvents();
       await getStats(user.member_id);
       await setFilter('upcoming');
       await filterEvents();
-           
     }
     loadData();
-    ;
 
-  },[] )
-  useEffect(()=>{
-    if(filteredEvents?.length>0){
-      setRsvpStatus(filteredEvents.slice(0,3)) 
-    }
   }, [])
+useEffect(() => {
+  if (filteredEvents && filteredEvents.length > 0) {
+    setEvents(filteredEvents.slice(0, 3));
+  }
+}, [filteredEvents]);
+
+  // async function handleRsvp(member_id, event){
+  //   event_status = await getEventRsvpStatus(member_id, event.event_id);
+  //   event.status =  event_status;
+  // }
+  async function handleRsvp(member_id, event, status) {
+    setEvents(prev =>
+      prev.map(e =>
+        e.event_id === event.event_id ? { ...e, status: '' } : e
+      )
+    );
+
+    await setMemberRsvpStatus(member_id, event.event_id, status);
+    const newStatus = await getEventRsvpStatus(member_id, event.event_id);
+
+    // Update immutably
+    setEvents(prev =>
+      prev.map(e =>
+        e.event_id === event.event_id ? { ...e, status: newStatus } : e
+      )
+    );
+  }
+  useEffect(() => {
+    if (events?.length > 0) {
+      setRsvpStatus(events);
+    }
+
+  }, [events])
+
+
   async function setRsvpStatus(events) {
-    for (const e of events){
-      e.status = await getEventRsvpStatus(user.member_id, e.event_id)
-      console.log(e.status)
+    for (const e of events) {
+      e.status = await getEventRsvpStatus(user.member_id, e.event_id);
     }
   }
-  // useEffect(()=>{
-  //     getUser();
-  // }, [getUser]);
-  const recentActivity = []
-  const recentRSVPs = [{ ide: 1, title: 'ab', status: 'attended', event_date: new Date(2025, 5, 6), location: 'library' }, { ide: 2, title: 'cd', status: 'rsvp', event_date: new Date(2025, 7, 23), location: 'park' }]
-  const isEditing = false;
-  const setIsEditing = () => { };
 
   if (loadingUser) {
     return (
@@ -103,7 +125,7 @@ function DashBoardPage() {
           {/* Upcoming Events */}
           <Card title="Upcoming Events">
             <ul className="space-y-4">
-              {filteredEvents?.slice(0, 3).map((event) => (
+              {events?.map((event) => (
                 <li
                   key={event.event_id}
                   className="flex items-center justify-between border-b pb-2 last:border-none"
@@ -114,18 +136,25 @@ function DashBoardPage() {
                       <Calendar className="w-4 h-4" /> {new Date(event.start_datetime).toDateString()} • <Clock className="w-4 h-4" /> {event.time} • {event.location}
                     </p>
                   </div>
-                  {loading_rsvp_status ?
+                  {!event.status ?
                     (<span className="loading loading-spinner loading-lg"></span>) :
                     (<div>
-                      <button className="btn btn-primary btn-sm" disabled={event.status == 'attending'}>RSVP</button>
-                      {(event.status == "attending") && (<button className="btn btn-warning btn-sm">cancel</button>)}
+                      <button className="btn btn-primary btn-sm" disabled={event.status == 'attending'}
+                        onClick={async () => { await handleRsvp(user.member_id, event, 'attending') }}>
+                        RSVP
+                      </button>
+                      {(event.status == "attending") &&
+                        (<button className="btn btn-warning btn-sm"
+                          onClick={async () => { await handleRsvp(user.member_id, event, 'not attending') }}>
+                          cancel
+                        </button>)}
                     </div>
                     )
-
                   }
                   {/* <button className="btn btn-primary btn-sm" disabled>RSVP</button> */}
                 </li>
-              ))}
+              )
+              )}
             </ul>
             <button className="btn btn-link mt-4">View All Events</button>
           </Card>

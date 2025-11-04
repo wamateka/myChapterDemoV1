@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import{Link} from 'react-router-dom'
 import {Plus, Users, Award, Settings, BarChart3, Calendar, FileText, Camera, ArrowBigRight, ArrowRight} from 'lucide-react'
 import { useAdminEventStore } from '../../stores/useAdminEventsStore'
+import { useMemberStore } from '../../stores/useMemberStore';
 
 function AdminPanelPage() {
 const {events, getAttendance, getAttendanceById, attendances} =  useAdminEventStore();
-
+const {memberCount, getMemberCount} = useMemberStore();
+useEffect(()=>{
+  getMemberCount();
+},[])
 
   return (
     <div className="min-h-screen bg-base-200 py-8">
@@ -23,7 +27,7 @@ const {events, getAttendance, getAttendanceById, attendances} =  useAdminEventSt
               <Users className="w-8 h-8" />
             </div>
             <div className="stat-title">Total Members</div>
-            <div className="stat-value text-primary">{3}</div>
+            <div className="stat-value text-primary">{memberCount}</div>
             <div className="stat-desc">Active chapter members</div>
           </div>
 

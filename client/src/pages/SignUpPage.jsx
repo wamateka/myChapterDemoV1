@@ -9,22 +9,27 @@ function SignUpPage() {
     const [showPword, setShowPword] = useState(false);
     const [showCPword, setShowCPword] = useState(false);
     const navigate = useNavigate();
-    function handleSubmit(e){
+    async function handleSubmit(e){
         e.preventDefault();
-        validateInputs();
+        await validateInputs();
+        ad
+
     }
     useEffect(() => {
+      async function signUp(){
         if (formData.validated) {
             addUser().then(() => {
+                checkMe()
                 resetform();
             });
-            checkMe();
         }
         if(user){
           navigate('/dashboard')
         }else{
           console.log(user)
         }
+      }
+      signUp();
     }, [formData.validated,user]);
     function onSubmit(data) {
         console.log(data);

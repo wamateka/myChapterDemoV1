@@ -20,7 +20,7 @@ export const useMemberStore = create((set,get) => ({
         try{
             const res = await api.get("/members/count");
             console.log(res.data.data.count)
-            set({member_count: res.data.data.count})
+            set({memberCount: res.data.data.count})
         }catch(err){
             console.log(err);
         }

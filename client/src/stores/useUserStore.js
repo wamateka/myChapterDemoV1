@@ -6,7 +6,6 @@ export const useUserStore = create((set, get) => ({
     profile: {},
     user: {},
     loading: false,
-    loading_rsvp_status: false,
     error: null,
     stats:null,
     formData: {
@@ -74,18 +73,6 @@ export const useUserStore = create((set, get) => ({
         }catch(err){
             console.log('error getting points: ', err)
 
-        }
-    },
-    getEventRsvpStatus: async(member_id, event_id) => {
-        set({loading_rsvp_status: true})
-        try{
-            const response = await api.get(`/rsvp/status?member_id=${member_id}&event_id=${event_id}`)
-            return response.data.data.status
-        }catch(err){
-            console.log("error getting rsvp status: ", err)
-            return false
-        }finally{
-            set({loading_rsvp_status: false})
         }
     },
     updateProfile: async (id) => {

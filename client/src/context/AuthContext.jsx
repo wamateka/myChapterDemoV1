@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
         toast.success('logged in succesfully');
         }catch(err){
             console.log('error logging user: ', err);
-            toast.error(err.response.data.message)
+            // toast.error(err.response.data.message)
         }finally{
             setLoginguser(false)
         }

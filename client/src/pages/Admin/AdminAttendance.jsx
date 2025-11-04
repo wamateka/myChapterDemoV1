@@ -18,9 +18,10 @@ function AdminAttendance() {
     fetchEvents();
   }, [])
 
-  function handleEventSelect(event) {
+  async function handleEventSelect(event) {
     setSelectedEvent(event);
-    fetchEventAttendance(event.event_id);
+    await fetchEventAttendance(event.event_id);
+    setRecords(eventAttendance);
     console.log("event attendance: ", eventAttendance)
   }
   function setFilter(filter){
@@ -57,7 +58,7 @@ function AdminAttendance() {
                   {events.map((event) => (
                     <button
                       key={event.event_id}
-                      onClick={() => handleEventSelect(event)}
+                      onClick={async () => await handleEventSelect(event)}
                       className={`w-full text-left p-3 rounded-lg border ${selectedEvent?.event_id === event.event_id
                         ? 'border-primary bg-primary/10'
                         : 'border-base-300 hover:border-primary/50'
@@ -65,7 +66,7 @@ function AdminAttendance() {
                     >
                       <div className="font-semibold">{event.title}</div>
                       <div className="text-sm text-base-content/70">
-                        {new Date(event.event_date).toLocaleDateString().slice(0, 10)}
+                        {new Date(event.start_datetime).toLocaleDateString().slice(0, 10)}
                       </div>                                                                                                                                                                                                                                                                                                                                                                       
                       <div className="text-xs text-base-content/50">
                         {event.location || 'Location TBD'}
@@ -216,7 +217,7 @@ function AdminAttendance() {
                           </tr>
                         </thead>
                         <tbody>
-                          {eventAttendance.map((record, index) => (
+                          {records?.map((record, index) => (
                             <tr key={record.attendance_id}>
                               <td>
                                 <div className="font-semibold">

@@ -61,15 +61,15 @@ app.use('/api/attendances', attendanceRoutes);
 app.use('/api/pointslogs', pointsLogRoutes);
 
 
-  app.use(express.static(path.join(__dirname,"./client/dist")));
-  console.log("Static files served from:",path.join(__dirname,"./client/dist"))
+// app.use(express.static(path.join(__dirname,"./client/dist")));
+// console.log("Static files served from:",path.join(__dirname,"./client/dist"))
 
-app.use("", (req, res) => {
-  console.log("catch all route")
-  console.log("Path: ",path.join(__dirname, "client", "dist", "index.html"))
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+// app.use("", (req, res) => {
+//   console.log("catch all route")
+//   console.log("Path: ",path.join(__dirname, "client", "dist", "index.html"))
+//   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
 
-});
+// });
 
 
 if(sql){

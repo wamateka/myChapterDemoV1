@@ -134,7 +134,7 @@ LEFT JOIN
 LEFT JOIN
     zones z ON e.zone_id = z.zone_id
 WHERE 
-    m.member_id = 2
+    m.member_id = ${id}
 GROUP BY 
     m.member_id, m.first_name, m.last_name, m.profile_picture, m.year_in_college, 
     m.email, m.phone_number, m.nsbe_id, m.nsbe_membership_type, m.major, m.graduation_year, z.name

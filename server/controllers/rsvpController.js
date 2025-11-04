@@ -40,3 +40,26 @@ export const getMemberRsvpStatus = async(req,res)=>{
     }
 }
 
+export const setMemberRsvpStatus = async(req,res) =>{
+    const {member_id, event_id, status} = req.body
+
+    try{
+        const existingRsvp = await sql`
+        SELECT * FROM rsvp WHERE member_id = ${member_id} AND event_id = ${event_id}
+        `
+        if(existingRsvp.length === 0){
+            const newRsvp = await sql`
+            INSERT INTO rsvp (member_id, event_id, status) VALUES (${member_id}, ${event_id}, ${status}) RETURNING *
+            `
+            return res.status(201).json({message: "success", data: newRsvp[0]})
+        } else {
+            const updatedRsvp = await sql`
+            UPDATE rsvp SET status = ${status} WHERE member_id = ${member_id} AND event_id = ${event_id} RETURNING *
+            `
+            return res.status(200).json({message: "success", data: updatedRsvp[0]})
+        }
+    }catch(error){
+        console.log("Error setting RSVP status: ", error)
+        return res.status(500).json({ message: "error", error: error.message });
+    }
+}
