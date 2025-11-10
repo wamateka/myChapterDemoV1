@@ -6,9 +6,7 @@ import { getMemberByEmail, getMemberById } from './controllers/memberControler.j
 import axios from 'axios'
 const BASE_URL = 'http://localhost:3000/api/members'
 passport.use(new LocalStrategy({ usernameField: 'email' }, async function verify(email, password, cb) {
-    //
-    console.log('email: ', email);
-    //
+    
     const results = await axios.get(`${BASE_URL}/email/${email}`);
     const user = results.data.data;
     if (!user) return cb(null, false, { message: 'no user found' })

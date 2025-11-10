@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 import toast from "react-hot-toast";
-import api from "../api";
+import api, {BASE_URL} from "../api";
 export const useEventStore = create((set, get) => ({
   filter: "all",
   filteredEvents: [],
@@ -66,6 +66,7 @@ export const useEventStore = create((set, get) => ({
       const response = await api.get(`/events/${id}`);
       setFormData(response.data.data);
       console.log(formData);
+      return response.data.data;
     } catch (err) {
       console.log(err);
     } finally {
@@ -175,5 +176,25 @@ export const useEventStore = create((set, get) => ({
         set({loading: false})
       }
 
+  },
+
+  generateCheckinCode: async (id) => {
+    try{
+      const response = await api.post(`/events/${id}/generate-checkin-code`);
+      return response.data.checkin_code;
+    }catch(err){
+      console.log("error generating checkin code: ", err);
+    }
+  },
+  getCheckinCode: async (id) =>{
+    try{
+      const response = await api.get(`/events/checkin-code/${id}`);
+      const checkin_code = response.data.checkin_code;
+      const checkin_link = `${BASE_URL}/attendance/checkin/${checkin_code}`;
+      return {checkin_code, checkin_link};
+    }catch(err){
+      console.log("error getting checkin code: ", err);
+    }
   }
+
 }));

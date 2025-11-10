@@ -12,7 +12,6 @@ function AdminAttendance() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [records, setRecords] = useState();
   const navigate = useNavigate(null);
-  const totalMembers = 10;
   useEffect(() => {
     getMemberCount();
     fetchEvents();

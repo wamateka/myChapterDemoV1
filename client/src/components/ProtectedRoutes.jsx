@@ -23,7 +23,7 @@ function ProtectedRoutes({ children, requireAdmin = false }) {
     if (requireAdmin && !isAdmin) {
         return <Navigate to="/dashboard" replace />
     }
-
+    
 
     return  children
 }

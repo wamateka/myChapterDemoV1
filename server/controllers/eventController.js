@@ -1,5 +1,6 @@
 import { sql } from "../db/dbConnection.js";
 import { upload } from "../util/cloudinary.js";
+import { generateCheckinCode as generateCode } from "../util/checkinCodegen.js";
 export const getEvents = async (req, res) => {
   try {
     const events = await sql`
@@ -143,3 +144,19 @@ export const getEventsByMember = async (req, res) => {
     res.status(500).json({ message: "error", error: error.message });
   }
 };
+
+export const generateCheckinCode = async (req, res) => {
+  const { id } = req.params;
+  try{
+    const checkin_code = generateCode(6);
+    await sql`
+      UPDATE Events
+      SET checkin_code = ${checkin_code}
+      WHERE event_id = ${id};
+    `;
+    res.status(200).json({message: "success", checkin_code});
+  } catch (error) {
+    console.error("Error generating checkin code:", error);
+    res.status(500).json({ message: "error", error: error.message });
+  }
+}

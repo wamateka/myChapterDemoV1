@@ -12,8 +12,6 @@ function SignUpPage() {
     async function handleSubmit(e){
         e.preventDefault();
         await validateInputs();
-        ad
-
     }
     useEffect(() => {
       async function signUp(){

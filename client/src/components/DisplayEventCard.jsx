@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { CalendarDays, MapPin, Users, Award, Clock, ArrowRight, HandCoins, Watch, CrossIcon, X } from 'lucide-react';
+import { CalendarDays, MapPin, Users, Award, Clock, ArrowRight, HandCoins, Watch, CrossIcon, X} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useRSVPStore } from '../stores/useRSVPStore';
+import { useNavigate, Link } from 'react-router-dom';
 function DisplayEventCard(props) {
   const {user} = useAuth();
   const { getEventRsvpStatus, loading_rsvp_status, setMemberRsvpStatus } = useRSVPStore();
@@ -28,9 +29,11 @@ function DisplayEventCard(props) {
 
   }
   return (
-    <div className="card bg-base-100 w-96 shadow-xl hover:shadow-2xl transition-all duration-300 
+    
+    <Link className="card bg-base-100 w-96 shadow-xl hover:shadow-2xl transition-all duration-300 
     rounded-2xl border border-base-200 
     overflow-hidden  hover:scale-[1.02] hover:border-primary "
+      to={`/event/${props.id}`}
     >
       {/* Event Image */}
       <figure className="relative">
@@ -134,7 +137,7 @@ function DisplayEventCard(props) {
             )
         )}
       </div>
-    </div>
+    </Link>
   )
 }
 

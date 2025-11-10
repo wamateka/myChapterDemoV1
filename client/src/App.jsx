@@ -40,6 +40,12 @@ function App() {
         </ProtectedRoutes>
         
       } />
+      <Route path='/event/:id' element={
+        <ProtectedRoutes>
+          <EventPage />
+        </ProtectedRoutes>
+        
+      } />
       <Route path='/gallery' element={
         <ProtectedRoutes>
           <GalleryPage />

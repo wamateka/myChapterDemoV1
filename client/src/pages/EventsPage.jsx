@@ -2,13 +2,11 @@ import React from 'react'
 import { useEffect } from 'react';
 import { useEventStore } from '../stores/useEventStore';
 import DisplayEventCard from '../components/DisplayEventCard';
-import { Badge } from 'lucide-react';
+import { Badge, Link } from 'lucide-react';
 import { useRSVPStore } from '../stores/useRSVPStore';
 
 function EventsPage() {
   const { filter, setFilter, events, filteredEvents, loading, error, fetchEvents, filterEvents } = useEventStore();
-  const { getEventRsvpStatus, loading_rsvp_status, setMemberRsvpStatus } = useRSVPStore()
-  const { setMemberRsvp } = useRSVPStore();
   useEffect(() => {
     setFilter('all')
     fetchEvents();
@@ -98,6 +96,7 @@ function EventsPage() {
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {filteredEvents?.map(e => (
+              
               <DisplayEventCard
                 key={e.event_id}
                 id = {e.event_id}
