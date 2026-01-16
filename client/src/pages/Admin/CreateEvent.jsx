@@ -31,10 +31,10 @@ export default function CreateEventPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormData({
-        ...formData,
-        created_by_member_id: user.member_id,
-        start_datetime: new Date(formData.start_datetime).toISOString(),
-        end_datetime: new Date(formData.end_datetime).toISOString(),
+       ...formData,
+       created_by_member_id: user.member_id,
+      //  start_datetime: new Date(formData.start_datetime).toISOString(),
+      //  end_datetime: new Date(formData.end_datetime).toISOString(),
     })
     await createEvent();
     navigate("/admin/events");

@@ -1,10 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { useUserStore } from '../stores/useUserStore'
-import { Edit, Save, User, Phone, GraduationCap, Award, Calendar, MapPin, Ticket, Activity, Image, Clock, Star } from 'lucide-react'
-import { useAuth } from '../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
-import { useEventStore } from '../stores/useEventStore'
-import { useRSVPStore } from '../stores/useRSVPStore'
+import React, { useEffect, useState } from "react";
+import { useUserStore } from "../stores/useUserStore";
+import {
+  Edit,
+  Save,
+  User,
+  Phone,
+  GraduationCap,
+  Award,
+  Calendar,
+  MapPin,
+  Ticket,
+  Activity,
+  Image,
+  Clock,
+  Star,
+} from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useEventStore } from "../stores/useEventStore";
+import { useRSVPStore } from "../stores/useRSVPStore";
 // Reusable Stat Card
 function StatCard({ label, value, icon, color }) {
   return (
@@ -30,35 +44,39 @@ function Card({ title, children }) {
 
 function DashBoardPage() {
   const { user, loadingUser } = useAuth();
-  const { filter, filteredEvents, fetchEvents, setFilter, filterEvents } = useEventStore();
+  const { filter, filteredEvents, fetchEvents, setFilter, filterEvents } =
+    useEventStore();
   const { stats, getStats } = useUserStore();
-  const { getEventRsvpStatus, loading_rsvp_status, setMemberRsvpStatus } = useRSVPStore();
+  const { getEventRsvpStatus, loading_rsvp_status, setMemberRsvpStatus } =
+    useRSVPStore();
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     const loadData = async () => {
       await fetchEvents();
       await getStats(user.member_id);
-      await setFilter('upcoming');
+      await setFilter("upcoming");
       await filterEvents();
-    }
+    };
     loadData();
-
-  }, [])
-useEffect(() => {
-  if (filteredEvents && filteredEvents.length > 0) {
-    setEvents(filteredEvents.slice(0, 3));
-  }
-}, [filteredEvents]);
+  }, []);
+  useEffect(() => {
+    console.log("filteredEvents changed: ", filteredEvents);
+    if (filteredEvents && filteredEvents.length > 0) {
+      setEvents(filteredEvents.slice(0, 3));
+    }else{
+      setEvents([]);
+    }
+  }, [filteredEvents]);
 
   // async function handleRsvp(member_id, event){
   //   event_status = await getEventRsvpStatus(member_id, event.event_id);
   //   event.status =  event_status;
   // }
   async function handleRsvp(member_id, event, status) {
-    setEvents(prev =>
-      prev.map(e =>
-        e.event_id === event.event_id ? { ...e, status: '' } : e
+    setEvents((prev) =>
+      prev.map((e) =>
+        e.event_id === event.event_id ? { ...e, status: "" } : e
       )
     );
 
@@ -66,19 +84,18 @@ useEffect(() => {
     const newStatus = await getEventRsvpStatus(member_id, event.event_id);
 
     // Update immutably
-    setEvents(prev =>
-      prev.map(e =>
+    setEvents((prev) =>
+      prev.map((e) =>
         e.event_id === event.event_id ? { ...e, status: newStatus } : e
       )
     );
   }
   useEffect(() => {
+    console.log("events changed: ", events);
     if (events?.length > 0) {
       setRsvpStatus(events);
     }
-
-  }, [events])
-
+  }, [events]);
 
   async function setRsvpStatus(events) {
     for (const e of events) {
@@ -91,7 +108,7 @@ useEffect(() => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="loading loading-spinner loading-lg"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -102,8 +119,16 @@ useEffect(() => {
       </div>
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Points" value={`${stats?.total_points} pts`} icon={<Star className="w-5 h-5" />} />
-        <StatCard label="Events Attended" value={stats?.events_attended} icon={<Calendar className="w-5 h-5" />} />
+        <StatCard
+          label="Points"
+          value={`${stats?.total_points} pts`}
+          icon={<Star className="w-5 h-5" />}
+        />
+        <StatCard
+          label="Events Attended"
+          value={stats?.events_attended}
+          icon={<Calendar className="w-5 h-5" />}
+        />
         <StatCard
           label="Local Dues"
           value={user.local_dues ? "Paid" : "Unpaid"}
@@ -133,28 +158,44 @@ useEffect(() => {
                   <div>
                     <p className="font-semibold">{event.title}</p>
                     <p className="text-sm text-gray-500 flex items-center gap-1">
-                      <Calendar className="w-4 h-4" /> {new Date(event.start_datetime).toDateString()} • <Clock className="w-4 h-4" /> {event.time} • {event.location}
+                      <Calendar className="w-4 h-4" />{" "}
+                      {new Date(event.start_datetime).toDateString()} •{" "}
+                      <Clock className="w-4 h-4" /> {event.time} •{" "}
+                      {event.location}
                     </p>
                   </div>
-                  {!event.status ?
-                    (<span className="loading loading-spinner loading-lg"></span>) :
-                    (<div>
-                      <button className="btn btn-primary btn-sm" disabled={event.status == 'attending'}
-                        onClick={async () => { await handleRsvp(user.member_id, event, 'attending') }}>
+                  {!event.status ? (
+                    <span className="loading loading-spinner loading-lg"></span>
+                  ) : (
+                    <div>
+                      <button
+                        className="btn btn-primary btn-sm"
+                        disabled={event.status == "attending"}
+                        onClick={async () => {
+                          await handleRsvp(user.member_id, event, "attending");
+                        }}
+                      >
                         RSVP
                       </button>
-                      {(event.status == "attending") &&
-                        (<button className="btn btn-warning btn-sm"
-                          onClick={async () => { await handleRsvp(user.member_id, event, 'not attending') }}>
+                      {event.status == "attending" && (
+                        <button
+                          className="btn btn-warning btn-sm"
+                          onClick={async () => {
+                            await handleRsvp(
+                              user.member_id,
+                              event,
+                              "not attending"
+                            );
+                          }}
+                        >
                           cancel
-                        </button>)}
+                        </button>
+                      )}
                     </div>
-                    )
-                  }
+                  )}
                   {/* <button className="btn btn-primary btn-sm" disabled>RSVP</button> */}
                 </li>
-              )
-              )}
+              ))}
             </ul>
             <button className="btn btn-link mt-4">View All Events</button>
           </Card>
@@ -172,7 +213,6 @@ useEffect(() => {
 
         {/* Right Column */}
         <div className="space-y-6">
-
           {/* Announcements */}
           {/* <Card title="Announcements & Blog Highlights">
                   <ul className="list-disc pl-5 space-y-2">
@@ -212,7 +252,7 @@ useEffect(() => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default DashBoardPage
+export default DashBoardPage;

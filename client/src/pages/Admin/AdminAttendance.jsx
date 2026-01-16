@@ -17,11 +17,15 @@ function AdminAttendance() {
     fetchEvents();
   }, [])
 
+  useEffect(()=>{
+    setRecords(eventAttendance);
+  }, [eventAttendance]);
+
   async function handleEventSelect(event) {
     setSelectedEvent(event);
-    await fetchEventAttendance(event.event_id);
-    setRecords(eventAttendance);
-    console.log("event attendance: ", eventAttendance)
+    const records = await fetchEventAttendance(event.event_id);
+    setRecords(records);
+    console.log("event attendance: ", records);
   }
   function setFilter(filter){
     if (filter === 'all'){

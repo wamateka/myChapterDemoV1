@@ -3,6 +3,7 @@ import { CalendarDays, MapPin, Users, Award, Clock, ArrowRight, HandCoins, Watch
 import { useAuth } from '../context/AuthContext';
 import { useRSVPStore } from '../stores/useRSVPStore';
 import { useNavigate, Link } from 'react-router-dom';
+import e from 'cors';
 function DisplayEventCard(props) {
   const {user} = useAuth();
   const { getEventRsvpStatus, loading_rsvp_status, setMemberRsvpStatus } = useRSVPStore();
@@ -120,13 +121,13 @@ function DisplayEventCard(props) {
               <div className='card-actions justify-end mt-6'>
                 <button className="btn btn-primary btn-sm px-4 gap-2 shadow-md hover:scale-105 transition" 
                 disabled={rsvp_status == 'attending'}
-                  onClick={async () => { await handleRsvp(user.member_id, props.id, 'attending') }}>
+                  onClick={async (e) => { e.preventDefault(); e.stopPropagation(); await handleRsvp(user.member_id, props.id, 'attending') }}>
                   RSVP
                 <ArrowRight className="w-4 h-4" />
                 </button>
                 {(rsvp_status == "attending") &&
                   (<button className="btn btn-warning btn-sm px-4 gap-2 shadow-md hover:scale-105 transition"
-                    onClick={async () => { await handleRsvp(user.member_id, props.id, 'not attending') }}>
+                    onClick={async (e) => { e.preventDefault(); e.stopPropagation(); await handleRsvp(user.member_id, props.id, 'not attending') }}>
                     cancel
                   <X className="w-4 h-4"/>
                   </button>)}

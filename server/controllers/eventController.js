@@ -43,14 +43,17 @@ export const addEvent = async (req, res) => {
     point_value,
     max_attendee,
   } = req.body;
-  const fileBase64 = `data:${
-    req.file.mimetype
-  };base64,${req.file.buffer.toString("base64")}`;
-  const fileName = req.file.originalname;
-  try {
+  const url = '';
+  if(req.file){
+    const fileBase64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+    const fileName = req.file.originalname;
     console.log("uploading poster image ...");
-    const url = await upload(fileBase64, fileName, "posters");
+    url = await upload(fileBase64, fileName, "posters");
     console.log("image uploaded successfully: ", url);
+  }
+  
+  try {
+    
     const newEvent = await sql`
             INSERT INTO Events (created_by_member_id, type, title, description, location, start_datetime, end_datetime, point_value, max_attendee, poster_img_url)
             VALUES (${created_by_member_id}, ${type}, ${title}, ${description}, ${location}, ${start_datetime}, ${end_datetime}, ${point_value}, ${max_attendee}, ${url})
@@ -63,7 +66,7 @@ export const addEvent = async (req, res) => {
 };
 
 export const updateEvent = async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   let {
     created_by_member_id,
     type,
@@ -80,11 +83,10 @@ export const updateEvent = async (req, res) => {
 
   try {
     if (req.file) {
-      const fileBase64 = `data:${
-        req.file.mimetype
-      };base64,${req.file.buffer.toString("base64")}`;
+      const fileBase64 = `data:${req.file.mimetype
+        };base64,${req.file.buffer.toString("base64")}`;
       const fileName = req.file.originalname;
-      poster_img_url =await upload(fileBase64, fileName, "posters");
+      poster_img_url = await upload(fileBase64, fileName, "posters");
     }
     const updatedEvent = await sql`
             UPDATE Events
@@ -147,14 +149,14 @@ export const getEventsByMember = async (req, res) => {
 
 export const generateCheckinCode = async (req, res) => {
   const { id } = req.params;
-  try{
+  try {
     const checkin_code = generateCode(6);
     await sql`
       UPDATE Events
-      SET checkin_code = ${checkin_code}
+      SET checkincode = ${checkin_code}
       WHERE event_id = ${id};
     `;
-    res.status(200).json({message: "success", checkin_code});
+    res.status(200).json({ message: "success", checkin_code });
   } catch (error) {
     console.error("Error generating checkin code:", error);
     res.status(500).json({ message: "error", error: error.message });

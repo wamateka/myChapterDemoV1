@@ -111,6 +111,9 @@ export const addAttendanceRecord = async (req, res) => {
             INSERT INTO attendance (member_id, event_id, status, checked_in_at)
             VALUES (${member_id}, ${event_id}, 'present', NOW())
             RETURNING *;`;
+            await sql`INSERT INTO pointslog (member_id, points, source_type)
+            VALUES (${member_id}, (SELECT point_value FROM events WHERE event_id = ${event_id}), 'event');
+            `;
         
         res.status(201).json({message: 'Attendance record added successfully', data: result[0]});
     } catch (error) {
@@ -120,13 +123,22 @@ export const addAttendanceRecord = async (req, res) => {
 }
 
 export const checkinAttendanceRecord = async (req, res) => {
-    const {eventId} = req.params;
+    const {checkinCode} = req.params;
+    const {event_id} = req.body
     const {member_id} = req.body;
     if (!member_id) {
         return res.status(400).json({message: 'member_id is required'});
     }
     try {
         // Check if the attendance record already exists
+        const validCode = await sql`
+            SELECT checkincode FROM events 
+            WHERE checkincode = ${checkinCode};
+        `
+        if (validCode<1){
+            console.log('invalid checkin code')
+            return res.status(400).json({message: 'iNVALID CODE'})
+        }
         const existingRecord = await sql`
             SELECT * FROM attendance 
             WHERE member_id = ${member_id} AND event_id = ${event_id};`;
@@ -136,12 +148,15 @@ export const checkinAttendanceRecord = async (req, res) => {
         }
 
         // Insert new attendance record
-        const result = await sql`
+        const record = await sql`
             INSERT INTO attendance (member_id, event_id, status, checked_in_at)
             VALUES (${member_id}, ${event_id}, 'present', NOW())
-            RETURNING *;`;
+            RETURNING *;`
+            await sql`INSERT INTO pointslog (member_id, points, source_type)
+            VALUES (${member_id}, (SELECT point_value FROM events WHERE event_id = ${event_id}), 'event');
+            `;
         
-        res.status(201).json({message: 'Attendance record added successfully', data: result[0]});
+        res.status(201).json({message: 'Attendance record added successfully', data: record[0]});
     } catch (error) {
         console.error('Error adding attendance record:', error);
         res.status(500).json({message: 'error', error: error.message});

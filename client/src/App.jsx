@@ -26,6 +26,7 @@ import CreateEventPage from './pages/Admin/CreateEvent'
 import EditEventPage from './pages/Admin/EditEventPage'
 import CreateBlog from './pages/Admin/CreateBlog'
 import EditBlog from './pages/Admin/EditBlog'
+import CheckinPage from './pages/checkinPage'
 function App() {
 
   return (
@@ -43,6 +44,12 @@ function App() {
       <Route path='/event/:id' element={
         <ProtectedRoutes>
           <EventPage />
+        </ProtectedRoutes>
+        
+      } />
+      <Route path='/checkin/:eventid/:checkincode' element={
+        <ProtectedRoutes>
+          <CheckinPage />
         </ProtectedRoutes>
         
       } />
@@ -104,10 +111,10 @@ function App() {
         
       }/>
       <Route path= '/blogs/create'  element={
-        <ProtectedRoutes requireAdmin>
+        <ProtectedRoutes>
           <CreateBlog/>
         </ProtectedRoutes>
-        
+
       }/>
       <Route path= '/admin/blogs/edit/:id'  element={
         <ProtectedRoutes requireAdmin>

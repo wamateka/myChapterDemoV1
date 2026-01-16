@@ -4,7 +4,7 @@ import Select from 'react-select'
 import { useAttendanceStore } from '../stores/useAttendanceStore'
 function AddRecordModal(props) {
   const { membersList, getMemberList, loading} = useMemberStore()
-  const {selectedMembers, setSelectedMembers, addAttendanceRecord} = useAttendanceStore()
+  const {selectedMembers, setSelectedMembers, addAttendanceRecord, fetchEventAttendance} = useAttendanceStore()
   const [addedMembers, setAddedMembers] = useState([])
 
   const [options, setOptions] = useState([])
@@ -21,6 +21,7 @@ function AddRecordModal(props) {
     for (const m of selectedMembers){
       await addAttendanceRecord(m.value, props.event_id);
     }
+    await fetchEventAttendance(props.event_id);
     setSelectedMembers([]);
     document.getElementById('add_record').hide
   }
@@ -46,7 +47,7 @@ function AddRecordModal(props) {
             value={selectedMembers}
             onChange={handleChange}
           />
-                      <div className="modal-action">
+            <div className="modal-action">
             <button type="submit" className="btn btn-primary w-50%" disabled = {loading || selectedMembers==0}>
               {loading ? (
                 <span className='loading-spinner'></span>

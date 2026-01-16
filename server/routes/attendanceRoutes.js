@@ -9,5 +9,5 @@ router.get('/status/:status', getAttendanceByStatus);
 router.get('/event/:eventId', getAttendancesByEventId);
 router.get('/member/:memberId', getAttendancesByMemberId);
 router.post('/member', addAttendanceRecord);
-router.post('/checkin/:eventId', checkinAttendanceRecord);
+router.post('/checkin/:checkinCode', checkinAttendanceRecord);
 export default router;

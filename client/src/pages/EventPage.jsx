@@ -3,7 +3,7 @@ import {QRCodeSVG} from 'qrcode.react';
 import { useAuth } from '../context/AuthContext';
 import { CalendarDays, MapPin, Users, Award, Clock, KeyRound, Loader2, QrCode } from 'lucide-react';
 import { useEventStore } from '../stores/useEventStore';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 
 function EventPage() {
   const { user, isAdmin } = useAuth();
@@ -11,7 +11,10 @@ function EventPage() {
   const [event, setEvent] = useState();
   const [message, setMessage] = useState(null);
   const [checkinCode, setCheckinCode] = useState('');
+  const [generatingCode, setGeneratingCode] = useState(false);
   const id = useParams().id;
+  const navigate = useNavigate();
+  // const url = 
   useEffect(() => {
     async function loadData() {
       const e = await fetchEvent(id);
@@ -20,14 +23,17 @@ function EventPage() {
     //change this 
     setMessage({ text: 'checkin', type: 'success' })
     loadData();
-  }, [1])
+  }, [])
   async function getCode(id){
     const code = await getCheckinCode(id);
-    setCheckinCode(code);
+    return code;
   };
-  async function generateCode(id) {
-    const code = await generateCheckinCode(id);
-    setCheckinCode(code);
+  async function handleGenerateCode(id){
+    setGeneratingCode(true);
+    await generateCheckinCode(id);
+    const updatedEvent = await fetchEvent(id);
+    setEvent(updatedEvent);
+    setGeneratingCode(false);
   }
   if (loading || !event) {
     return (
@@ -106,9 +112,12 @@ function EventPage() {
                 onChange={(e) => setCheckinCode(e.target.value.toUpperCase())}
                 className="input input-bordered w-full max-w-xs uppercase text-center tracking-widest"
               />
-              <button
+                <button
                 disabled={checkinCode.length === 0}
                 className="btn btn-primary"
+                onClick={() => {
+                  navigate(`/checkin/${event.event_id}/${checkinCode}`);
+                }}
               >
                 {false ? (
                   <>
@@ -118,6 +127,7 @@ function EventPage() {
                   'Check In'
                 )}
               </button>
+
             </div>
 
             {message && (
@@ -136,6 +146,7 @@ function EventPage() {
                 <div className="flex flex-wrap gap-3 mt-3">
                 <button
                   className="btn btn-outline btn-primary gap-2"
+                  onClick={async () => await handleGenerateCode(event.event_id)}
                 >
                   <QrCode className="w-5 h-5" /> Generate Code
                 </button>
@@ -143,7 +154,9 @@ function EventPage() {
                 <button className="btn btn-outline btn-secondary">Edit Event</button>
                 <button className="btn btn-outline btn-accent">View Attendance</button>
               </div>
-              <div className="mt-4"><QRCodeSVG value="https://reactjs.org/" size={128} />code:1234</div>
+              {event.checkincode && (
+              <div className="mt-4"><QRCodeSVG value={`${window.location.origin}/checkin/${event?.checkincode}`} size={128} />code:{event.checkincode}</div>
+              )}
               </div>
             </>)
           }
