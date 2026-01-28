@@ -27,6 +27,7 @@ import EditEventPage from './pages/Admin/EditEventPage'
 import CreateBlog from './pages/Admin/CreateBlog'
 import EditBlog from './pages/Admin/EditBlog'
 import CheckinPage from './pages/checkinPage'
+import AdminMembers from './pages/Admin/AdminMembers'
 function App() {
 
   return (
@@ -125,6 +126,12 @@ function App() {
       <Route path= '/admin/attendance'  element={
         <ProtectedRoutes requireAdmin>
           <AdminAttendance />
+        </ProtectedRoutes>
+        
+      }/>
+      <Route path= '/admin/members'  element={
+        <ProtectedRoutes requireAdmin>
+          <AdminMembers />
         </ProtectedRoutes>
         
       }/>

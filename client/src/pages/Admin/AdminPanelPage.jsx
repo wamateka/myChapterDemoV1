@@ -137,7 +137,7 @@ useEffect(()=>{
               </div>
             </div>
           </Link>
-
+          <Link to="/admin/members" className="card bg-base-100 shadow-xl card-hover">
           <div className="card bg-base-100 shadow-xl card-hover">
             <div className="card-body">
               <div className="flex items-center gap-4">
@@ -155,6 +155,7 @@ useEffect(()=>{
               </div>
             </div>
           </div>
+          </Link>
 
           <div className="card bg-base-100 shadow-xl card-hover">
             <div className="card-body">
