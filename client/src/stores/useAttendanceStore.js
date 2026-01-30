@@ -2,7 +2,6 @@ import axios from "axios";
 import { create } from "zustand";
 import api from "../api.js";
 import toast from "react-hot-toast";
-import e from "cors";
 export const useAttendanceStore = create((set, get) => ({
   loading: false,
   checkinCredentials: {
