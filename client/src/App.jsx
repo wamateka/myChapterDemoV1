@@ -26,7 +26,7 @@ import CreateEventPage from './pages/Admin/CreateEvent'
 import EditEventPage from './pages/Admin/EditEventPage'
 import CreateBlog from './pages/Admin/CreateBlog'
 import EditBlog from './pages/Admin/EditBlog'
-import CheckinPage from './pages/checkinPage'
+import CheckinPage from './pages/CheckinPage'
 import AdminMembers from './pages/Admin/AdminMembers'
 function App() {
 
