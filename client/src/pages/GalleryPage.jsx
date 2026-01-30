@@ -1,13 +1,26 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useGalleryStore } from '../stores/useGalleryStore'
 import { Plus } from 'lucide-react'
 import UploadImageModal from '../components/UploadImageModal';
+import GallerySlideshow from '../components/GallerySlideshow';
 
 function GalleryPage() {
     const { fetchGallery, gallery, loading } = useGalleryStore();
+    const [slideshowOpen, setSlideshowOpen] = useState(false);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
     useEffect(() => {
         fetchGallery();
     }, [])
+
+    const openSlideshow = (index) => {
+        setSelectedImageIndex(index);
+        setSlideshowOpen(true);
+    };
+
+    const closeSlideshow = () => {
+        setSlideshowOpen(false);
+    };
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -36,8 +49,12 @@ function GalleryPage() {
                     </button>
                     </div>
                     <div className="flex flex-wrap gap-4 items-end">
-                        {gallery.map((image) => (
-                            <div key={image.gallery_image_id} className="flex-shrink-0">
+                        {gallery.map((image, index) => (
+                            <div 
+                                key={image.gallery_image_id} 
+                                className="flex-shrink-0 cursor-pointer"
+                                onClick={() => openSlideshow(index)}
+                            >
                                 <img
                                     src={image.image_url}
                                     alt="image"
@@ -50,6 +67,13 @@ function GalleryPage() {
                 </div>
             </div>
             <UploadImageModal/>
+            {slideshowOpen && (
+                <GallerySlideshow
+                    gallery={gallery}
+                    initialIndex={selectedImageIndex}
+                    onClose={closeSlideshow}
+                />
+            )}
         </div>
 
     )
