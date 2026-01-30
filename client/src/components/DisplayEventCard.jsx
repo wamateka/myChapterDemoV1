@@ -3,7 +3,6 @@ import { CalendarDays, MapPin, Users, Award, Clock, ArrowRight, HandCoins, Watch
 import { useAuth } from '../context/AuthContext';
 import { useRSVPStore } from '../stores/useRSVPStore';
 import { useNavigate, Link } from 'react-router-dom';
-import e from 'cors';
 function DisplayEventCard(props) {
   const {user} = useAuth();
   const { getEventRsvpStatus, loading_rsvp_status, setMemberRsvpStatus } = useRSVPStore();
